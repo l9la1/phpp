@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string("phone_number");
             $table->string("email");
             $table->boolean("aproved");
+            $table->string("password");
         });
     }
 
