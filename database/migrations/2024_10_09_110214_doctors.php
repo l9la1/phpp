@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('waitinglist', function (Blueprint $table) {
+        Schema::create('doctors', function (Blueprint $table) {
             $table->id();
-            $table->integer("patient_id");
-            $table->integer("social_worker_id");
+            $table->text('name');
+            $table->date('date_of_birth');
+            $table->text('contact_email');
+            $table->text('contact_phone');
+            $table->text('specialty');
         });
     }
 

@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoices', function (Blueprint $table) {
+        Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->integer("patient_id");
-            $table->string("room_type");
-            $table->boolean("payed");
-            $table->date("send_date");
-            $table->date("payed_date");
+            $table->integer('roomnumber');
+            $table->text('status');
+            $table->integer('bed_amount');
         });
     }
 

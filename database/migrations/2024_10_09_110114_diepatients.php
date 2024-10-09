@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('doctor', function (Blueprint $table) {
+        Schema::create('diedpatients', function (Blueprint $table) {
             $table->id();
-            $table->string("front_name");
-            $table->string("last_name");
-            $table->string("phone_number");
-            $table->string("email");
-            $table->string("password");
+            $table->integer('patient_id');
+            $table->date('decolumn: ad_date');
         });
     }
 

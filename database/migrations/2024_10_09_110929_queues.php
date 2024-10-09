@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('incidents', function (Blueprint $table) {
+        Schema::create('queue', function (Blueprint $table) {
             $table->id();
-            $table->integer("patient_id");
-            $table->string("what");
-            $table->string("how_solved");
+            $table->integer('priority');
+            $table->integer('status');
+            $table->integer('patient_id');
         });
     }
 
