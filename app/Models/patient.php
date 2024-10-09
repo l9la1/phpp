@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class patient extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'Patient_id',
+        'Name',
+        'Address',
+        'phonenumber',
+        'date_of_birth',
+        'ApprovalState',
+        'AssignedRoomID',
+        'registrationDate'
+    ];
+    protected $table = 'patients';
+
+    public function appoint()
+    {
+        return $this->hasMany(appointment::class,"Patient_id","Patient_id");
+    }
+}

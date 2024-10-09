@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\appointments;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('doctors');
-});
+Route::get('/',[appointments::class,'getAppointments']);
+Route::post("/",[appointments::class,"addapt_Appointment"]);
