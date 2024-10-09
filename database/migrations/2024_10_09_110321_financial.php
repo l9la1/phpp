@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('appointments', function (Blueprint $table) {
+        Schema::create('financial', function (Blueprint $table) {
             $table->id();
-            $table->integer("patient_id");
-            $table->integer("doctor_id");
-            $table->string("problem");
-            $table->string("how_solved");
-            $table->boolean("done");
-            $table->dateTime("when");
+            $table->integer('patient_id');
+            $table->double('hire_cost',10,2);
+            $table->double('caretaking_costs',10,2);
+            $table->boolean('payed');
         });
     }
 
