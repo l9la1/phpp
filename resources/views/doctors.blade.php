@@ -7,68 +7,170 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <title>Doctor</title>
+    <title>Doctor Appointment System</title>
+    <style>
+        body {
+            background-color: #e9ecef; /* Slightly darker background */
+            color: #343a40; /* Darker text color */
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        .header-title {
+            margin: 30px 0;
+            font-size: 2.5rem;
+            text-align: center;
+            font-weight: 700;
+            color: #0056b3; /* Darker blue */
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+            text-align: center; /* Centered text */
+        }
+
+        .btn-custom {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-custom:hover {
+            background-color: #218838;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        .table th {
+            background-color: #0056b3; /* Darker header */
+            color: white;
+        }
+
+        /* Adjust column widths */
+        .client-col {
+            width: 25%;
+        }
+
+        .date-col {
+            width: 25%;
+        }
+
+        .reason-col {
+            width: 35%;
+        }
+
+        .action-col {
+            width: 15%;
+        }
+    </style>
 </head>
 
 <body onload="setTime()">
-    <div id="messages">
+    <div id="messages" class="container mt-3"></div>
+
+    <div class="container">
+        <h1 class="header-title">Doctor's Appointment System</h1>
     </div>
-    <h1>Welkom test</h1>
-    <div class="card float-end" style="width:500px; margin-right:10px;">
-        <div class="card-body">
-            <form method="post" action="/addApointment" onsubmit="addAppointment(event)" id="addAp">
-                @csrf
-                <div class="input-group">
-                    <label class="input-group-text">client</label>
-                    <select class="form-control" name="patientName">
 
-                        @foreach ($patient as $pat)
-                            <option value='{{ $pat->id }}'name="name">{{ $pat->name }} </option>
-                        @endforeach
-                    </select>
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5 class="mb-0">Add New Appointment</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="/addApointment" onsubmit="addAppointment(event)" id="addAp">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label">Client</label>
+                                <select class="form-select" name="patientName" required>
+                                    @foreach ($patient as $pat)
+                                        <option value='{{ $pat->id }}'>{{ $pat->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Datum</label>
+                                <input type="datetime-local" class="form-control" name="date" value="2024-10-25T10:10"
+                                    id="nAppDate" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Reden</label>
+                                <textarea class="form-control" name="reason" id="nAppReason" required></textarea>
+                            </div>
+                            <div class="text-end">
+                                <input type="submit" class="btn btn-custom" value="Voeg Afspraak Toe" />
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <lablel class="input-group-text">datum</lablel>
-                    <input type="datetime-local" class="form-control" name="date" value="2024-10-25T10:10"
-                        id="nAppDate" />
-                </div>
-                <div class="input-group">
-                    <lablel class="input-group-text">reden</lablel>
-                    <textarea type="text" class="form-control" name="reason" id="nAppReason"></textarea>
-                </div>
+            </div>
 
-        </div>
-        <div class="card-footer">
-            <input type="submit" class="btn btn-success float-end" value="voeg afspraak toe" />
-            </form>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-success text-white text-center">
+                        <h5 class="mb-0">Upcoming Appointments</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="client-col">Client</th>
+                                        <th class="date-col">Datum</th>
+                                        <th class="reason-col">Voor Wat</th>
+                                        <th class="action-col">Adapt</th>
+                                        <th class="action-col">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($app as $ap)
+                                        <tr id="{{ $ap->id }}">
+                                            <td>
+                                                <select id="s{{ $ap->id }}" class="form-select">
+                                                    @foreach ($patient as $pat)
+                                                        <option value='{{ $pat->id }}'
+                                                            @if ($pat->id == $ap->pat->id) selected @endif>
+                                                            {{ $pat->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="datetime-local" value='{{ $ap->appointment_date }}'
+                                                    name="date" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <textarea
+                                                    class="form-control">{{ $ap->reason }}</textarea>
+                                            </td>
+                                            <td>
+                                                <input type="button" value="Adapt" class="btn btn-warning"
+                                                    onclick="updateData({{ $ap->id }})" />
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-danger" onclick="deleteAppointment({{ $ap->id }})">Delete</button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <table class="table table-dark table-striped">
-        <tr>
-            <th>client</th>
-            <th>datum</th>
-            <th>voor wat</th>
-            <th>adapt</th>
-            <th>remove</th>
-        </tr>
-        @foreach ($app as $ap)
-            <tr id="{{ $ap->id }}">
-                <td><select id="s{{ $ap->id }}">
-
-                        @foreach ($patient as $pat)
-                            <option value='{{ $pat->id }}'name="name"
-                                @if ($pat->id == $ap->pat->id) selected @endif>{{ $pat->name }} </option>
-                        @endforeach
-                    </select>
-                </td>
-                <td><input type="datetime-local" value='{{ $ap->appointment_date }}' name="date" /></td>
-                <td><input type="text" value="{{ $ap->reason }}" name="reason" /></td>
-                <td><input type="button" value="adapt" class="btn btn-primary"
-                        onclick="updateData({{ $ap->id }})" /></td>
-                <td><button class="btn btn-danger" onclick="deleteAppointment({{ $ap->id }})">Delete</button></td>
-            </tr>
-        @endforeach
-    </table>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
@@ -144,20 +246,13 @@
         }
 
         function updateData(id) {
-            var name, date, reason;
-            var r = $("#" + id).children().find("input");
-            for (var i = 0; i < r.length; i++) {
-                var d = r[i];
-                if (d.name == "date") date = d.value;
-                else if (d.name == "reason") reason = d.value;
-            }
             fetch(location, {
                 method: "POST",
                 body: JSON.stringify({
                     id: id,
                     patid: $("#s" + id).val(),
-                    date: date,
-                    reason: reason,
+                    date:  $("#" + id).children().find("input").val(),
+                    reason: $("#"+id).children().find("textarea").val(),
                 }),
                 headers: {
                     "Content-type": "application/json",
