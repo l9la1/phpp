@@ -178,18 +178,22 @@
         integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+        // First ask if you are sure 
+        // If so then make a api call to delete the appointment
+        // If errors show them and if not refresh the page
         function deleteAppointment(id) {
-            if (confirm("Ben je zeker om de afspraak te verwijderen")) {
-                fetch(location + "api/deleteApp/" + id).then(err=>showError(err));
-            }
+            if (confirm("Ben je zeker om de afspraak te verwijderen")) fetch(location + "api/deleteApp/" + id).then(err=>showError(err));
         }
 
+        // This is the function that is called to show all the errors returned by the api
         function showError(response) {
             var mess = $("#messages");
             if (!response.ok) {
                     response.json().then(error => {
                         var err = error.errors;
+                        // Check if there are errors
                         if (err) {
+                            // Loop through until the right point
                             for (let field in error)
                                 for (let i in error[field])
                                     for (let j in error[field][i])
@@ -197,7 +201,7 @@
                                                 j]
                                             .toString()
                                             .replace(',', '&emsp;') + "</p>");
-
+                            // Remove the errors
                             setTimeout(() => {
                                 for (var i = 0; i < mess.children().length; i++)
                                     $(mess.children()[i]).hide("slow", "swing", function() {
@@ -212,6 +216,7 @@
             }
         }
 
+        // This is to set the date picker to current date and prevent that you can make a appoint earlier then today
         function setTime() {
             $("#nAppDate").attr({
                 "min": getCurrentDateTime()
@@ -219,6 +224,7 @@
             $("#nAppDate").val(getCurrentDateTime());
         }
 
+        // Get current date
         function getCurrentDateTime() {
             const now = new Date();
 
@@ -235,6 +241,7 @@
             return `${year}-${month}-${day}T${hours}:${minutes}`;
         }
 
+        // This is to add a new appointment by making a api call with the right data
         function addAppointment(e) {
             e.preventDefault();
             const data = new FormData(document.getElementById("addAp"));
@@ -245,6 +252,7 @@
             }, ).then(err=>showError(err));
         }
 
+        // This is to update the appointment by sending the corresponding data with a api call including the csrf key that is needed
         function updateData(id) {
             fetch(location, {
                 method: "POST",

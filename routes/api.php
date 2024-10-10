@@ -18,6 +18,8 @@ use App\Http\Controllers\appointments;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+// All the doctor routes
+Route::prefix("doctor")->group(function(){
 Route::post("/addApointment",[appointments::class,"addApointment"]);
 Route::get("/deleteApp/{id}",[appointments::class,"deleteAppointment"]);
+});

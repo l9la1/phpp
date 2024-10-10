@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\appointments;
+use Illuminate\Support\Facades\Redirect;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,13 @@ use App\Http\Controllers\appointments;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+// All the doctor routes
+Route::prefix("doctor")->group(function(){
 Route::get('/',[appointments::class,'getAppointments']);
 Route::post("/",[appointments::class,"addapt_Appointment"]);
+});
+
+// This is where the user will redirect to if url not found or api
+Route::fallback(function(){
+    return Redirect::to("/doctor");
+});

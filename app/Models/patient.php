@@ -21,6 +21,7 @@ class patient extends Model
     ];
     protected $table = 'patients';
 
+    // This is to show all appointments belonging to the patient
     public function appoint()
     {
         return $this->hasMany(appointment::class,"Patient_id","Patient_id");

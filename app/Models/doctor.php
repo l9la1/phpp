@@ -18,6 +18,7 @@ class doctor extends Model
     ];
     protected $table = 'doctors';
 
+    // This is so you know wich appointments has one doctor
     public function appoint()
     {
         return $this->hasMany(appointment::class,"doctor_id","id");
