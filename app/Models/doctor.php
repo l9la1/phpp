@@ -20,6 +20,6 @@ class doctor extends Model
 
     public function appoint()
     {
-        return $this->hasMany(appointment::class,"doctor_id","doctor_id");
+        return $this->hasMany(appointment::class,"doctor_id","id");
     }
 }

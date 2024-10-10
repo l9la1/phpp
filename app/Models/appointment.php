@@ -9,20 +9,21 @@ class appointment extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'Patient_id',
+        'patient_id',
         'doctor_id',
-        'Reason',
-        'Appointment_date'
+        'reason',
+        'appointment_date'
     ];
+    public $timestamps = false;
     protected $table = 'appointments';
 
     public function doc()
     {
-        return $this->belongsTo(doctor::class,"doctor_id","doctor_id");
+        return $this->belongsTo(doctor::class,"doctor_id","id");
     }
 
     public function pat()
     {
-        return $this->belongsTo(patient::class,"Patient_id","Patient_id");
+        return $this->belongsTo(patient::class,"patient_id","id");
     }
 }
