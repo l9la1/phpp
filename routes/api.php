@@ -21,5 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // All the doctor routes
 Route::prefix("doctor")->group(function(){
 Route::post("/addApointment",[appointments::class,"addApointment"]);
-Route::get("/deleteApp/{id}",[appointments::class,"deleteAppointment"]);
+Route::get("/deleteApp/{id}",[appointments::class,"deleteApointment"]);
 });
