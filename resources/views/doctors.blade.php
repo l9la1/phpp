@@ -8,71 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Doctor Appointment System</title>
-    <style>
-        body {
-            background-color: #e9ecef; /* Slightly darker background */
-            color: #343a40; /* Darker text color */
-        }
-
-        .container {
-            max-width: 1200px;
-        }
-
-        .header-title {
-            margin: 30px 0;
-            font-size: 2.5rem;
-            text-align: center;
-            font-weight: 700;
-            color: #0056b3; /* Darker blue */
-        }
-
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .table th,
-        .table td {
-            vertical-align: middle;
-            text-align: center; /* Centered text */
-        }
-
-        .btn-custom {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .btn-custom:hover {
-            background-color: #218838;
-        }
-
-        .alert {
-            margin-top: 20px;
-        }
-
-        .table th {
-            background-color: #0056b3; /* Darker header */
-            color: white;
-        }
-
-        /* Adjust column widths */
-        .client-col {
-            width: 25%;
-        }
-
-        .date-col {
-            width: 25%;
-        }
-
-        .reason-col {
-            width: 35%;
-        }
-
-        .action-col {
-            width: 15%;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
 <body onload="setTime()">

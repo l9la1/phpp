@@ -1,0 +1,63 @@
+body {
+    background-color: #e9ecef; /* Slightly darker background */
+    color: #343a40; /* Darker text color */
+}
+
+.container {
+    max-width: 1200px;
+}
+
+.header-title {
+    margin: 30px 0;
+    font-size: 2.5rem;
+    text-align: center;
+    font-weight: 700;
+    color: #0056b3; /* Darker blue */
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+    text-align: center; /* Centered text */
+}
+
+.btn-custom {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-custom:hover {
+    background-color: #218838;
+}
+
+.alert {
+    margin-top: 20px;
+}
+
+.table th {
+    background-color: #0056b3; /* Darker header */
+    color: white;
+}
+
+/* Adjust column widths */
+.client-col {
+    width: 25%;
+}
+
+.date-col {
+    width: 25%;
+}
+
+.reason-col {
+    width: 35%;
+}
+
+.action-col {
+    width: 15%;
+}
