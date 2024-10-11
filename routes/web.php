@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\patients;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\appointments;
 use Illuminate\Support\Facades\Redirect;
@@ -15,12 +16,15 @@ use Illuminate\Support\Facades\Redirect;
 |
 */
 // All the doctor routes
-Route::prefix("doctor")->group(function(){
-Route::get('/',[appointments::class,'getAppointments']);
-Route::post("/",[appointments::class,"addapt_Appointment"]);
+Route::prefix("doctor")->group(function () {
+    Route::get('/', [appointments::class, 'getAppointments']);
+    Route::post("/", [appointments::class, "addapt_Appointment"]);
 });
 
+Route::prefix("patient")->group(function(){
+    Route::get("/",[patients::class,"index"]);
+});
 // This is where the user will redirect to if url not found or api
-Route::fallback(function(){
+Route::fallback(function () {
     return Redirect::to("/doctor");
 });
