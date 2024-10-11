@@ -182,7 +182,7 @@
         // If so then make a api call to delete the appointment
         // If errors show them and if not refresh the page
         function deleteAppointment(id) {
-            if (confirm("Ben je zeker om de afspraak te verwijderen")) fetch(location + "/api/deleteApp/" + id).then(err=>showError(err));
+            if (confirm("Ben je zeker om de afspraak te verwijderen")) fetch("/api/doctor/deleteApp/" + id).then(err=>showError(err));
         }
 
         // This is the function that is called to show all the errors returned by the api
@@ -211,7 +211,7 @@
                         }
                     });
             } else {
-                // window.location.reload();
+                window.location.reload();
                 $("#nAppReason").val("");
             }
         }
@@ -246,7 +246,7 @@
             e.preventDefault();
             const data = new FormData(document.getElementById("addAp"));
 
-            fetch(location + "/api/addApointment", {
+            fetch("/api/doctor/addApointment", {
                 method: "POST",
                 body: data,
             }, ).then(err=>showError(err));

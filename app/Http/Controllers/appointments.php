@@ -62,9 +62,8 @@ class appointments extends Controller
         }
     }
 
-    public function deleteAppointment($id)
+    public function deleteApointment($id)
     {
-        dd($id);
         if(is_int((int)$id))
         {
             $ap = appointment::find((int)$id);
