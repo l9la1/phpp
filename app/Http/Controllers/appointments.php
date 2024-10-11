@@ -64,9 +64,10 @@ class appointments extends Controller
 
     public function deleteAppointment($id)
     {
+        dd($id);
         if(is_int((int)$id))
         {
-            $ap = appointment::find(htmlspecialchars(addslashes($id)));
+            $ap = appointment::find((int)$id);
             $ap->delete();
         }else throw ValidationException::withMessages(['id'=>'id is niet een integer']);
     }
