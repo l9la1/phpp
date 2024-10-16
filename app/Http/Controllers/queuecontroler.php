@@ -12,19 +12,21 @@ use App\Models\appointment;
 
 class queuecontroler extends Controller
 {
+    // Initialise the right page
     public function showQueue($what)
     {
         if ($what)
             return view("administration", [
                 "queue" => quemodel::get(),
-                "pat" => patient::get(),
+                "pat" => patient::where("approval_state","1")->get(),
                 "rooms" => roommodel::where("status", "free")->get(),
-                "app" => appointment::where("appointment_date",">=",Carbon::now())->orderby("appointment_date")->get(),
+                "app" => appointment::where("appointment_date", ">=", Carbon::now())->orderby("appointment_date")->get(),
                 "doctor" => doctor::get(),
                 "what" => $what
             ]);
     }
 
+    // This is to move a patient from the queue to the normal list -1 is extern
     public function addPatientAndAssignRoom($room_num, $pat_id)
     {
         try {
@@ -53,30 +55,10 @@ class queuecontroler extends Controller
         }
     }
 
+    // This is to delete a patient out of the queue 
     public function removeOutOfQueue($id)
     {
-        try {
-            quemodel::findOrFail($id)->delete();
-            return response()->json(["mes" => "Succesvol verwijderd"]);
-        } catch (Exception $e) {
-        }
-    }
-
-    public function changeApp($id,$date,$doctor)
-    {
-        $a = appointment::findOrFail($id);
-        if(appointment::where("doctor_id",$doctor)->where("appointment_date",$date)->count()==1)
-        return response()->json(["mes"=>"De doktor heeft al een afspraak op ".$date]);
-        $a->doctor_id=$id;
-        $a->appointment_date=$date;
-        $a->doctor_id=$doctor;
-        $a->save();
-        return response()->json(["mes"=>"succesvol aangepast"]);
-    }
-
-    public function deleteApp($id)
-    {
-        appointment::findOrFail($id)->delete();
-        return response()->json(["mes"=>"succesvol aangepast"]);
+        quemodel::findOrFail($id)->delete();
+        return response()->json(["mes" => "Succesvol verwijderd"]);
     }
 }

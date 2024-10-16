@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\appointments;
 use App\Http\Controllers\queuecontroler;
+use App\Models\appointment;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,6 @@ Route::get("/deleteApp/{id}",[appointments::class,"deleteAppointment"]);
 Route::prefix("administrator")->group(function(){
 Route::get("/assign_room/{room_id}/{patient_id}",[queuecontroler::class,"addPatientAndAssignRoom"]);
 Route::get("/removeQueue/{id}",[queuecontroler::class,"removeOutOfQueue"]);
-Route::get("/changeApp/{id}/{date}/{doctor}",[queuecontroler::class,"changeApp"]);
-Route::get("/deleteApp/{id}",[queuecontroler::class,"deleteApp"]);
+Route::get("/changeApp/{id}/{date}/{doctor}",[appointment::class,"changeApp"]);
+Route::get("/deleteApp/{id}",[appointment::class,"deleteApp"]);
 });

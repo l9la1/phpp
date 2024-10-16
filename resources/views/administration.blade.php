@@ -22,7 +22,7 @@
                         <a class="nav-link" href="appointment">Afspraak</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="queue">Queue</a>
+                        <a class="nav-link" href="client">patienten</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="queue">Queue</a>
@@ -228,24 +228,68 @@
     }
 
     function deleteAppoint(id) {
-        fetch("/api/administrator/deleteApp/" + id).then(er => {
-            if (er.ok) {
-                er.json().then(mess => {
-                    $("#messages").text(mess.mes);
-                    $("#messages").show("slow", "linear", function() {
-                        $("#" + id).hide("slow", "linear", function() {
-                            $("#" + id).empty();
-                        })
-                        setTimeout(function() {
-                            $("#messages").hide("slow");
-                        }, 2000);
+        if (confirm("Ben je zeker ervan om de afspraak te verwijderen")) {
+            fetch("/api/administrator/deleteApp/" + id).then(er => {
+                if (er.ok) {
+                    er.json().then(mess => {
+                        $("#messages").text(mess.mes);
+                        $("#messages").show("slow", "linear", function() {
+                            $("#" + id).hide("slow", "linear", function() {
+                                $("#" + id).empty();
+                            })
+                            setTimeout(function() {
+                                $("#messages").hide("slow");
+                            }, 2000);
+                        });
                     });
-                });
 
-            }
-        });
+                }
+            });
+        }
     }
 </script>
+</body>
+
+</html>
+@elseif($what == 'client')
+<table class="table table-bordered table-hover table-striped text-center align-middle">
+    <thead class="thead-dark">
+        <tr>
+            <th>naam</th>
+            <th>adres</th>
+            <th>telefoonnummer</th>
+            <th>geboortedatum</th>
+            <th>kamer nummer</th>
+            <th>pas aan</th>
+            <th>verwijder patient</th>
+        </tr>
+    <tbody>
+        @foreach ($pat as $pt)
+            <tr>
+                <td>{{ $pt->name }}</td>
+                <td><input class="form-control" id="a{{$pt->id}} "type="text" value="{{ $pt->address }}"/></td>
+                <td><input class="form-control" type="text" id="p{{$pt->id}}" value="{{ $pt->phonenumber }}"/></td>
+                <td>{{ $pt->date_of_birth }}</td>
+                <td>
+                    <select class="form-control" id="s{{$pt->id}}">
+                    <option value="-1"
+                    @if($pt->assigned_room_id==-1) selected @endif>extern</option>
+                    @foreach($rooms as $rm)
+                    <option value={{$rm->id}} @if($rm->id==$pt->assigned_room_id)selected @endif>{{$rm->roomnumber}}</option>
+                    @endforeach
+                    </select>
+                </td>
+                <td><button class="btn btn-warning btn-sm" onclick="addaptPatient({{$pt->id}})">pas aan</button></td>
+                <td><button class="btn btn-danger btn-sm" onclick="removePatient({{$pt->id}})">verwijder patient</button></td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+</body>
+
+</html>
+@else
+<img src="https://http.cat/404" style="width:100vw;height:100vh;" />
 </body>
 
 </html>
