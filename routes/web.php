@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\appointments;
+use App\Http\Controllers\queuecontroler;
 use Illuminate\Support\Facades\Redirect;
 
 /*
@@ -18,6 +19,10 @@ use Illuminate\Support\Facades\Redirect;
 Route::prefix("doctor")->group(function(){
 Route::get('/',[appointments::class,'getAppointments']);
 Route::post("/",[appointments::class,"addapt_Appointment"]);
+});
+
+Route::prefix("administrator")->group(function(){
+Route::get("/",[queuecontroler::class,"showQueue"]);
 });
 
 // This is where the user will redirect to if url not found or api

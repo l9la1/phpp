@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\appointments;
+use App\Http\Controllers\queuecontroler;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +23,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix("doctor")->group(function(){
 Route::post("/addApointment",[appointments::class,"addApointment"]);
 Route::get("/deleteApp/{id}",[appointments::class,"deleteAppointment"]);
+});
+
+Route::prefix("administrator")->group(function(){
+Route::get("/assign_room/{room_id}/{patient_id}",[queuecontroler::class,"addPatientAndAssignRoom"]);
+Route::get("/removeQueue/{id}",[queuecontroler::class,"removeOutOfQueue"]);
 });
