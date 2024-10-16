@@ -7,38 +7,30 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <title>Document</title>
-    <style>
-        .nav ul li {
-            list-style-type: none;
-            display: inline;
-            padding: 1rem;
-        }
-
-        .nav ul li a {
-            text-decoration: none;
-            color: #000;
-        }
-
-        .nav ul li:hover {
-            background-color: #ccc;
-        }
-
-        .nav {
-            background-color: #aaa;
-        }
-    </style>
+    <title>administratie</title>
 </head>
 
 <body>
-    <div class="nav">
-        <ul>
-            <li><a href="queue">queue</a></li>
-            <li><a href="appointment">afspraak</a></li>
-            <li><a href="queue">queue</a></li>
-            <li><a href="queue">queue</a></li>
-        </ul>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="queue">Queue</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="appointment">Afspraak</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="queue">Queue</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="queue">Queue</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <!--
     administration can
     see addapt  the queue
@@ -73,27 +65,31 @@
                 oninput="search($(this).val())" />
         </div>
         <div style="height:400px;overflow-y:scroll;">
-            <table class="table table-bordered table-hover" id="que">
-                <tr>
-                    <th>priority</th>
-                    <th>patient naam</th>
-                    <th>verplaats naar patient lijst</th>
-                    <th>delete</th>
-                </tr>
-                @foreach ($queue as $que)
-                    <tr id="tr{{ $que->pat->id }}">
-                        <td>
-                            <p>{{ $que->priority }}</p>
-                        </td>
-                        <td>
-                            <p>{{ $que->pat->name }}</p>
-                        </td>
-                        <td><button class="btn btn-warning"
-                                onclick="makePatient({{ $que->pat->id }})">verplaats</button></td>
-                        <td><button class="btn btn-danger"
-                                onclick="removeFromQueue({{ $que->id }})">verwijder</button></td>
+            <table class="table table-bordered table-hover table-striped text-center align-middle" id="que">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>priority</th>
+                        <th>patient naam</th>
+                        <th>verplaats naar patient lijst</th>
+                        <th>delete</th>
                     </tr>
-                @endforeach
+                </thead>
+                <tbody>
+                    @foreach ($queue as $que)
+                        <tr id="tr{{ $que->pat->id }}">
+                            <td>
+                                <p>{{ $que->priority }}</p>
+                            </td>
+                            <td>
+                                <p>{{ $que->pat->name }}</p>
+                            </td>
+                            <td><button class="btn btn-warning btn-sm"
+                                    onclick="makePatient({{ $que->pat->id }})">verplaats</button></td>
+                            <td><button class="btn btn-danger btn-sm"
+                                    onclick="removeFromQueue({{ $que->id }})">verwijder</button></td>
+                        </tr>
+                    @endforeach
+                </tbody>
             </table>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -172,31 +168,38 @@
             table with all the appointments
             addapt the date patient and doctor
             -->
-<table class="table table-bordered table-hover">
-    <tr>
-        <th>patient naam</th>
-        <th>doctor</th>
-        <th>reden</th>
-        <th>datum</th>
-        <th>aanpassen</th>
-        <th>verwijderen</th>
-    </tr>
-    @foreach ($app as $ap)
-        <tr id="{{ $ap->id }}">
-            <td>{{ $ap->pat->name }}</td>
-            <td><select id="s{{ $ap->id }}">
-                    @foreach ($doctor as $d)
-                        <option @if ($d->id == $ap->doc->id) selected value="{{ $d->id }}" @endif>
-                            {{ $d->name }}</option>
-                    @endforeach
-                    <select></td>
-            <td>{{ $ap->reason }}</td>
-            <td><input id="d{{ $ap->id }}"type="datetime-local" value="{{ $ap->appointment_date }}" /></td>
-            <td><button class="btn btn-warning" onclick="changeAppoint({{ $ap->id }})">pas aan</button></td>
-            <td><button class="btn btn-danger" onclick="deleteAppoint({{ $ap->id }})">verwijder afspraak</button>
-            </td>
+<table class="table table-bordered table-hover table-striped text-center align-middle">
+    <thead class="thead-dark">
+        <tr>
+            <th>patient naam</th>
+            <th>doctor</th>
+            <th>reden</th>
+            <th>datum</th>
+            <th>aanpassen</th>
+            <th>verwijderen</th>
         </tr>
-    @endforeach
+    </thead>
+    <tbody>
+        @foreach ($app as $ap)
+            <tr id="{{ $ap->id }}">
+                <td>{{ $ap->pat->name }}</td>
+                <td><select id="s{{ $ap->id }}" class="form-control">
+                        @foreach ($doctor as $d)
+                            <option @if ($d->id == $ap->doc->id) selected value="{{ $d->id }}" @endif>
+                                {{ $d->name }}</option>
+                        @endforeach
+                        <select></td>
+                <td>{{ $ap->reason }}</td>
+                <td><input id="d{{ $ap->id }}"type="datetime-local" value="{{ $ap->appointment_date }}"
+                        class="form-control" /></td>
+                <td><button class="btn btn-warning btn-sm" onclick="changeAppoint({{ $ap->id }})">pas
+                        aan</button></td>
+                <td><button class="btn btn-danger btn-sm" onclick="deleteAppoint({{ $ap->id }})">verwijder
+                        afspraak</button>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
 </table>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
