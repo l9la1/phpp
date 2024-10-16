@@ -25,7 +25,7 @@ class appointments extends Controller
                 "date" => "date_format:Y-m-d\TH:i|required",
                 "reason" => "required|string|max:150|min:10"
             ]);
-            $ct = appointment::select("*")->where("appointment_date",$req->date)->count();
+            $ct = appointment::where("appointment_date",$req->date)->where("doctor_id",1)->count();
             if($ct>1)
                 throw ValidationException::withMessages(['date'=>["The date has already been taken."]]);
             $app = appointment::find($req->id);
