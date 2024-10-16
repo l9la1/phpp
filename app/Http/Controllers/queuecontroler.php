@@ -17,8 +17,8 @@ class queuecontroler extends Controller
     {
         if ($what)
             return view("administration", [
-                "queue" => quemodel::get(),
-                "pat" => patient::where("approval_state","1")->get(),
+                "queue" => quemodel::orderBy("priority", "asc")->orderBy("id")->get(),
+                "pat" => patient::where("approval_state", "1")->get(),
                 "rooms" => roommodel::where("status", "free")->get(),
                 "app" => appointment::where("appointment_date", ">=", Carbon::now())->orderby("appointment_date")->get(),
                 "doctor" => doctor::get(),
@@ -60,5 +60,13 @@ class queuecontroler extends Controller
     {
         quemodel::findOrFail($id)->delete();
         return response()->json(["mes" => "Succesvol verwijderd"]);
+    }
+
+    public function updatePriority($id,$priority)
+    {
+        $qu = quemodel::findOrFail($id);
+        $qu->priority=$priority;
+        $qu->save();
+
     }
 }

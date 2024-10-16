@@ -15,6 +15,7 @@ class quemodel extends Model
         'patient_id',
     ];
     protected $table = 'queue';
+    public $timestamps = false;
 
     public function pat()
     {

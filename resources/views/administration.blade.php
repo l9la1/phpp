@@ -78,7 +78,7 @@
                     @foreach ($queue as $que)
                         <tr id="tr{{ $que->pat->id }}">
                             <td>
-                                <p>{{ $que->priority }}</p>
+                                <p><input type="checkbox" id="c{{$que->id}}" @if($que->priority==1) checked @endif onclick="updatePriority({{$que->id}})"/></p>
                             </td>
                             <td>
                                 <p>{{ $que->pat->name }}</p>
@@ -116,12 +116,16 @@
                 }
             }
 
+            function updatePriority(id)
+            {
+                fetch("/api/administrator/setPriority/"+id+"/"+($("#c"+id).is(":checked")?1:0))
+            }
             // This is to move a patient of the queue to the patientlist
             function makePatient(id) {
                 $("#roomnumber").show();
                 var i = setInterval(() => {
                     if ($("#roomnumber").is(":hidden")) {
-                        fetch("/api/administrator/assign_room/" + $("#rNumber").val() + "/" + id).then(er => {
+                        fetch("/api/administrator/assign_room/" + $("#rNumber").val() + "/" + id+"/").then(er => {
                             er.json().then(mess => {
                                 $("#messages").show();
                                 $("#messages").text(mess.mes);
