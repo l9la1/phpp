@@ -22,7 +22,7 @@ Route::post("/",[appointments::class,"addapt_Appointment"]);
 });
 
 Route::prefix("administrator")->group(function(){
-Route::get("/",[queuecontroler::class,"showQueue"]);
+Route::get("/{what}",[queuecontroler::class,"showQueue"]);
 });
 
 // This is where the user will redirect to if url not found or api
