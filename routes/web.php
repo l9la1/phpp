@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\patients;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\appointments;
 use App\Http\Controllers\queuecontroler;
@@ -25,7 +26,10 @@ Route::prefix("administrator")->group(function(){
 Route::get("/{what}",[queuecontroler::class,"showQueue"]);
 });
 
+Route::prefix("patient")->group(function(){
+    Route::get("/",[patients::class,"index"]);
+});
 // This is where the user will redirect to if url not found or api
-Route::fallback(function(){
+Route::fallback(function () {
     return Redirect::to("/doctor");
 });
