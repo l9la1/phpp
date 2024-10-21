@@ -8,6 +8,7 @@ use App\Models\doctor;
 use App\Models\patient;
 use App\Models\quemodel;
 use App\Models\roommodel;
+use App\Models\financials;
 use App\Models\appointment;
 
 class queuecontroler extends Controller
@@ -22,6 +23,7 @@ class queuecontroler extends Controller
                 "rooms" => roommodel::where("status", "free")->get(),
                 "app" => appointment::where("appointment_date", ">=", Carbon::now())->orderby("appointment_date")->get(),
                 "doctor" => doctor::get(),
+                "finance"=>financials::get(),
                 "what" => $what
             ]);
     }

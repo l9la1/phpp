@@ -32,7 +32,7 @@ class patient extends Model
 
     public function fin()
     {
-        return $this->belongsToMany(financials::class,"id","patient_id");
+        return $this->hasMany(financials::class,"id","patient_id");
     }
 
     public function familyMembers()

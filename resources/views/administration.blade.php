@@ -88,7 +88,8 @@
                             <td><button class="btn btn-warning btn-sm"
                                     onclick="makePatient({{ $que->pat->id }})">verplaats</button></td>
                             <td><button class="btn btn-danger btn-sm"
-                                    onclick="removeFromQueue({{ $que->id }})">verwijder</button></td>
+                                    onclick="removeFromQueue({{ $que->id }},{{ $que->pat->id }})">verwijder</button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -100,7 +101,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
             integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{ asset('js/apiResponse.js') }}"></script>
+        <script src="{{ asset('js/apiResponse.js') }}"></script>
 
         <script>
             // This is to search through the table of data
@@ -131,6 +132,9 @@
                     if ($("#roomnumber").is(":hidden")) {
                         fetch("/api/administrator/assign_room/" + $("#rNumber").val() + "/" + id + "/").then(er => {
                             showMess(er);
+                            $("#tr" + id).hide("slow", "linear", function() {
+                                $("#tr" + id).empty();
+                            });
                             clearInterval(i);
                         });
                     }
@@ -138,10 +142,13 @@
             }
 
             // To remove a person of the queue
-            function removeFromQueue(id) {
+            function removeFromQueue(id, trid) {
                 if (confirm("ben je zeker om de patient van de wachtlijst te verwijderen"))
                     fetch("/api/administrator/removeQueue/" + id).then(er => {
                         showMess(er);
+                        $("#tr" + trid).hide("slow", "linear", function() {
+                            $("#tr" + trid).empty();
+                        });
                     })
             }
         </script>
@@ -252,105 +259,146 @@
                     <button class="btn btn-secondary"
                         onclick="$('#f'+{!! $pt->id !!}).toggle('slow','linear');">familie</button>
                     <div id="f{{ $pt->id }}" style="display:none">
-                        @if (!empty($pt->familyMembers[0]))
-                            <div class="card d-inline-block" id="fm{{ $pt->familyMembers[0]->id }}">
-                                <div class="card-header">
-                                    <h3 class="card-title">familielid 1</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-3 text-start">
-                                        <label class="form-label">Naam:</label>
-                                        <p class="form-control">{{ $pt->familyMembers[0]->name }} </p>
-                                    </div>
-                                    <div class="mb-3 text-start">
-                                        <label class="form-label">Relatie:</label>
-                                        <p class="form-control">{{ $pt->familyMembers[0]->relation }}
-                                        </p>
-                                    </div>
-                                    <div class="mb-3 text-start">
-                                        <label class="form-label">Telefoonnummer:</label>
-                                        <input type="text" class="form-control"
-                                            id="fp{{ $pt->familyMembers[0]->id }}"
-                                            value='{{ $pt->familyMembers[0]->contact_number }}' />
-                                    </div>
-                                    <div class="mb-3 text-start">
-                                        <button class="btn btn-warning"
-                                            onclick="changeFam({{ $pt->familyMembers[0]->id }})">pas aan</button>
-                                        <button class="btn btn-danger"
-                                            onclick="removeFam({{ $pt->familyMembers[0]->id }})">verwijder</button>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                        @if (!empty($pt->familyMembers[1]))
-                            <div class="card d-inline-block" id="fm{{ $pt->familyMembers[1]->id }}">
-                                <div class="card-header">
-                                    <h3 class="card-title">familielid 2</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-3 text-start">
-                                        <label class="form-label">Naam:</label>
-                                        <p class="form-control">{{ $pt->familyMembers[1]->name }} </p>
-                                    </div>
-                                    <div class="mb-3 text-start">
-                                        <label class="form-label">Relatie:</label>
-                                        <p class="form-control">{{ $pt->familyMembers[1]->relation }}
-                                        </p>
-                                    </div>
-                                    <div class="mb-3 text-start">
-                                        <label class="form-label">Telefoonnummer:</label>
-                                        <input type="text" class="form-control"
-                                            id="fp{{ $pt->familyMembers[1]->id }}"
-                                            value='{{ $pt->familyMembers[1]->contact_number }}' />
-                                    </div>
-                                    <div class="mb-3 text-start">
-                                        <button class="btn btn-warning"
-                                            onclick="changeFam({{ $pt->familyMembers[1]->id }})">pas aan</button>
-                                        <button class="btn btn-danger"
-                                            onclick="removeFam({{ $pt->familyMembers[1]->id }})">verwijder</button>
-                                    </div>
-                                </div>
-                            </div>
-                        @else
-                            <div class="card d-inline-block">
-                                <form action="addFamily" method="post">
-                                    @csrf
-                                    <input type="hidden" value="{{ $pt->id }}" name="ptid" />
+                        <div class="d-flex">
+                            @if (!empty($pt->familyMembers[0]))
+                                <div class="card d-inline-block" id="fm{{ $pt->familyMembers[0]->id }}">
                                     <div class="card-header">
-                                        <h3 class="card-title">nieuwe familielid<br />toevoegen</h3>
+                                        <h3 class="card-title">familielid 1</h3>
                                     </div>
                                     <div class="card-body">
                                         <div class="mb-3 text-start">
-                                            @error('name')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
                                             <label class="form-label">Naam:</label>
-                                            <input type="text" name="name" class="form-control" />
+                                            <p class="form-control">{{ $pt->familyMembers[0]->name }} </p>
                                         </div>
-                                
                                         <div class="mb-3 text-start">
-                                            @error('relation')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
                                             <label class="form-label">Relatie:</label>
-                                            <input type="text" name="relation" class="form-control" />
+                                            <p class="form-control">{{ $pt->familyMembers[0]->relation }}
+                                            </p>
                                         </div>
-                                
                                         <div class="mb-3 text-start">
-                                            @error('phone')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
                                             <label class="form-label">Telefoonnummer:</label>
-                                            <input type="text" name="phone" class="form-control" />
+                                            <input type="text" class="form-control"
+                                                id="fp{{ $pt->familyMembers[0]->id }}"
+                                                value='{{ $pt->familyMembers[0]->contact_number }}' />
                                         </div>
-                                
                                         <div class="mb-3 text-start">
-                                            <input type="submit" class="btn btn-success" value="voeg toe" />
+                                            <button class="btn btn-warning"
+                                                onclick="changeFam({{ $pt->familyMembers[0]->id }})">pas aan</button>
+                                            <button class="btn btn-danger"
+                                                onclick="removeFam({{ $pt->familyMembers[0]->id }})">verwijder</button>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                        @endif
+                                </div>
+                            @else
+                                <div class="card d-inline-block">
+                                    <form action="addFamily" method="post">
+                                        @csrf
+                                        <input type="hidden" value="{{ $pt->id }}" name="ptid" />
+                                        <div class="card-header">
+                                            <h3 class="card-title">nieuwe familielid<br />toevoegen</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3 text-start">
+                                                @error('name')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                                <label class="form-label">Naam:</label>
+                                                <input type="text" name="name" class="form-control" />
+                                            </div>
+
+                                            <div class="mb-3 text-start">
+                                                @error('relation')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                                <label class="form-label">Relatie:</label>
+                                                <input type="text" name="relation" class="form-control" />
+                                            </div>
+
+                                            <div class="mb-3 text-start">
+                                                @error('phone')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                                <label class="form-label">Telefoonnummer:</label>
+                                                <input type="text" name="phone" class="form-control" />
+                                            </div>
+
+                                            <div class="mb-3 text-start">
+                                                <input type="submit" class="btn btn-success" value="voeg toe" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            @endif
+                            @if (!empty($pt->familyMembers[1]))
+                                <div class="card d-inline-block" id="fm{{ $pt->familyMembers[1]->id }}">
+                                    <div class="card-header">
+                                        <h3 class="card-title">familielid 2</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3 text-start">
+                                            <label class="form-label">Naam:</label>
+                                            <p class="form-control">{{ $pt->familyMembers[1]->name }} </p>
+                                        </div>
+                                        <div class="mb-3 text-start">
+                                            <label class="form-label">Relatie:</label>
+                                            <p class="form-control">{{ $pt->familyMembers[1]->relation }}
+                                            </p>
+                                        </div>
+                                        <div class="mb-3 text-start">
+                                            <label class="form-label">Telefoonnummer:</label>
+                                            <input type="text" class="form-control"
+                                                id="fp{{ $pt->familyMembers[1]->id }}"
+                                                value='{{ $pt->familyMembers[1]->contact_number }}' />
+                                        </div>
+                                        <div class="mb-3 text-start">
+                                            <button class="btn btn-warning"
+                                                onclick="changeFam({{ $pt->familyMembers[1]->id }})">pas aan</button>
+                                            <button class="btn btn-danger"
+                                                onclick="removeFam({{ $pt->familyMembers[1]->id }})">verwijder</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="card d-inline-block">
+                                    <form action="addFamily" method="post">
+                                        @csrf
+                                        <input type="hidden" value="{{ $pt->id }}" name="ptid" />
+                                        <div class="card-header">
+                                            <h3 class="card-title">nieuwe familielid<br />toevoegen</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3 text-start">
+                                                @error('name')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                                <label class="form-label">Naam:</label>
+                                                <input type="text" name="name" class="form-control" />
+                                            </div>
+
+                                            <div class="mb-3 text-start">
+                                                @error('relation')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                                <label class="form-label">Relatie:</label>
+                                                <input type="text" name="relation" class="form-control" />
+                                            </div>
+
+                                            <div class="mb-3 text-start">
+                                                @error('phone')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                                <label class="form-label">Telefoonnummer:</label>
+                                                <input type="text" name="phone" class="form-control" />
+                                            </div>
+
+                                            <div class="mb-3 text-start">
+                                                <input type="submit" class="btn btn-success" value="voeg toe" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            @endif
+                        </div>
                 </td>
                 <td><button class="btn btn-warning btn-sm" onclick="addaptPatient({{ $pt->id }})">pas
                         aan</button></td>
@@ -427,6 +475,73 @@
 see the status of invoices
 create new invoices
 -->
+<div class="row">
+    <div class="col-6 ps-5">
+        <div style="overflow:scroll;max-height:500px;box-shadow:5px 5px 15px #ccc" class="mt-5">
+            <h3 class="text-center" style="background-color:#aaa;">Bestaande facaturen</h3>
+            <table class="table table-bordered table-hover table-striped text-center align-middle">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>patient naam</th>
+                        <th>huur kosten</th>
+                        <th>ziekten kosten</th>
+                        <th>totaal</th>
+                        <th>betaald</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($finance as $fin)
+                        <tr>
+                            <td>{{ $fin->pat->name }}</td>
+                            <td>€{{ number_format($fin->hire_cost, 2, ',', '.') }}</td>
+                            <td>€{{ number_format($fin->caretaking_costs, 2, ',', '.') }}</td>
+                            <td>€{{ number_format($fin->hire_cost+$fin->caretaking_costs, 2, ',', '.') }}</td>
+                            <td>
+                                @if ($fin->payed)
+                                    betaald
+                                @else
+                                    openstaande facature
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-6 pe-5">
+        <div class="card mt-5" style="box-shadow:5px 5px 15px #ccc">
+            <div class="card-header">
+                <h3 class="text-center">Maak nieuwe facature</h3>
+            </div>
+            <div class="card-body">
+                <form action="addInvoice" method="post">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label">patient</label>
+                        <select class="form-control" name="patient">
+                            @foreach ($pat as $pt)
+                                <option value="{{ $pt->id }}">{{ $pt->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">huur kosten</label>
+                        <input type="number" value="0.00" step=".01" class="form-control" name="hiring" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">verzorgings kosten</label>
+                        <input type="number" value="0.00" step=".01" class="form-control"
+                            name="caretaking" />
+                    </div>
+                    <div class="mb-3">
+                        <input type="submit" value="voeg toe" class="btn btn-success" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 
 </html>

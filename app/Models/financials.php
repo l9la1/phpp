@@ -20,6 +20,6 @@ class financials extends Model
 
     public function pat()
     {
-        return $this->hasMany(patient::class,"id","patient_id");
+        return $this->belongsTo(patient::class,"patient_id","id");
     }
 }
