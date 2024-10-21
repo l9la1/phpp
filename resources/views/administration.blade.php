@@ -100,6 +100,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
             integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ asset('js/apiResponse.js') }}"></script>
+
         <script>
             // This is to search through the table of data
             function search(searchFor) {
@@ -191,6 +193,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
     integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ asset('js/apiResponse.js') }}"></script>
+
 <script>
     function changeAppoint(id) {
         fetch("/api/administrator/changeApp/" + id + "/" + encodeURIComponent($("#d" + id).val()) + "/" + $("#s" + id)

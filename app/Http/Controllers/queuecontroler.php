@@ -17,8 +17,8 @@ class queuecontroler extends Controller
     {
         if ($what)
             return view("administration", [
-                "queue" => quemodel::orderBy("priority", "asc")->orderBy("id")->get(),
-                "pat" => patient::where("approval_state", "1")->get(),
+                "queue" => quemodel::orderBy("priority", "desc")->orderBy("id")->get(),
+                "pat" => patient::where("approval_state", "0")->get(),
                 "rooms" => roommodel::where("status", "free")->get(),
                 "app" => appointment::where("appointment_date", ">=", Carbon::now())->orderby("appointment_date")->get(),
                 "doctor" => doctor::get(),
@@ -42,7 +42,7 @@ class queuecontroler extends Controller
                     $pat->approval_state = 1;
                     $pat->save();
 
-                    $room = roommodel::where("roomnumber", $room_num)->get();
+                    $room = roommodel::find( $room_num,"id");
                     $room->status = "bezet";
                     $room->save();
                 }

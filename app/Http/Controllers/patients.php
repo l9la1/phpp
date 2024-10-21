@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\roommodel;
 use App\Models\financials;
 use App\Models\appointment;
@@ -28,17 +29,19 @@ class patients extends Controller
             ]);
 
             $pat = patient::findOrFail($req->id);
-            $room = roommodel::where("id", $pat->assigned_room_id)->limit(1)->get();
-            $room->status="free";
-            $room->save();
+            $room = roommodel::find( $pat->assigned_room_id,"id");
+            if ($room !=null) {
+                $room->status = "free";
+                $room->save();
+            }
             $pat->address = $req->address;
             $pat->phonenumber = $req->phone;
             $pat->assigned_room_id = $req->roomNm;
             $pat->save();
 
-            $room = roommodel::where("id", $req->roomNm)->get();
-            $room->status = "bezet";
-            $room->save();
+            $rooms = roommodel::find( $req->roomNm,"id");
+            $rooms->status = "bezet";
+            $rooms->save();
             return response()->json(["suc" => "successvol aangepast"]);
         } catch (ValidationException $er) {
             return response()->json(["err" => $er->errors()]);
@@ -67,23 +70,23 @@ class patients extends Controller
         ]);
 
         $validatedData['registration_date'] = now();
-    
+
         // Save patient data
         $patient = patient::create($validatedData);
-    
+
         // Add patient to the queue
         queue::create([
             'patient_id' => $patient->id, // Set patient ID
             'priority' => 0, // Set priority, default is 1
             'status' => 0,   // Status: waiting
         ]);
-    
+
         return redirect()->route('patients.store');
     }
-    
+
 
     public function thankyou()
     {
         return view('patientregister');
     }
-}   
+}

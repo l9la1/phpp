@@ -15,6 +15,8 @@ class roommodel extends Model
         'bed_amount',
     ];
     protected $table = 'rooms';
+    public $timestamps = false;
+    
 
     public function pat()
     {
