@@ -10,14 +10,13 @@ class patient extends Model
     use HasFactory;
 
     protected $fillable = [
-        'Patient_id',
-        'Name',
-        'Address',
+        'name',  // should match the actual field name in the table
+        'address',  // should match the actual field name in the table
         'phonenumber',
         'date_of_birth',
-        'ApprovalState',
-        'AssignedRoomID',
-        'registrationDate'
+        'approval_state',
+        'assigned_room_id',
+        'registration_date'
     ];
     protected $table = 'patients';
 
@@ -30,5 +29,10 @@ class patient extends Model
     public function fin()
     {
         return $this->belongsToMany(financials::class,"id","patient_id");
+    }
+
+    public function queue()
+    {
+        return $this->hasOne(Queue::class);
     }
 }

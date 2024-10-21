@@ -28,3 +28,7 @@ Route::prefix("patient")->group(function(){
 Route::fallback(function () {
     return Redirect::to("/doctor");
 });
+
+Route::get('/patientregister', [patients::class, 'create'])->name('patients.create');
+Route::post('/patientregister', [patients::class, 'store'])->name('patients.store');
+Route::get('/thankyou', [patients::class, 'thankyou'])->name('patients.thankyou');
