@@ -14,6 +14,8 @@ class Queue extends Model
     protected $fillable = ['priority', 
     'status', 
     'patient_id'];
+    public $timestamps = false;
+
 
     public function patient()
     {

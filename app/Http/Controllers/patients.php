@@ -74,7 +74,7 @@ class patients extends Controller
         // Add patient to the queue
         queue::create([
             'patient_id' => $patient->id, // Set patient ID
-            'priority' => 1, // Set priority, default is 1
+            'priority' => 0, // Set priority, default is 1
             'status' => 0,   // Status: waiting
         ]);
     
