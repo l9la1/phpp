@@ -50,7 +50,7 @@ class queuecontroler extends Controller
 
             quemodel::where("patient_id", $pat_id)->delete();
 
-            return response()->json(["mes" => "success vol verplaatst"]);
+            return response()->json(["suc" => "success vol verplaatst"]);
         } catch (Exception $e) {
         }
     }
@@ -59,7 +59,7 @@ class queuecontroler extends Controller
     public function removeOutOfQueue($id)
     {
         quemodel::findOrFail($id)->delete();
-        return response()->json(["mes" => "Succesvol verwijderd"]);
+        return response()->json(["suc" => "Succesvol verwijderd"]);
     }
 
     public function updatePriority($id,$priority)

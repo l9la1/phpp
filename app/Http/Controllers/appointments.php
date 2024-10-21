@@ -36,7 +36,7 @@ class appointments extends Controller
 
             $app->save();
         } catch (ValidationException $ex) {
-            return response()->json(['errors' => $ex->errors()], $ex->status);
+            return response()->json(['err' => $ex->errors()], $ex->status);
         }
     }
 
@@ -58,7 +58,7 @@ class appointments extends Controller
             $app->appointment_date = $req->date;
             $app->save();
         } catch (ValidationException $ex) {
-            return response()->json(['errors' => $ex->errors()], $ex->status);
+            return response()->json(['err' => $ex->errors()], $ex->status);
         }
     }
 
@@ -76,18 +76,18 @@ class appointments extends Controller
        {
            $a = appointment::findOrFail($id);
            if (appointment::where("doctor_id", $doctor)->where("appointment_date", $date)->count() == 1)
-               return response()->json(["mes" => "De doktor heeft al een afspraak op " . $date]);
+               return response()->json(["err" => "De doktor heeft al een afspraak op " . $date]);
            $a->doctor_id = $id;
            $a->appointment_date = $date;
            $a->doctor_id = $doctor;
            $a->save();
-           return response()->json(["mes" => "succesvol aangepast"]);
+           return response()->json(["suc" => "succesvol aangepast"]);
        }
    
        // This is to delete a appointment
        public function deleteApp($id)
        {
            appointment::findOrFail($id)->delete();
-           return response()->json(["mes" => "succesvol aangepast"]);
+           return response()->json(["suc" => "succesvol aangepast"]);
        }
 }
