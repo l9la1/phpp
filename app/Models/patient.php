@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\financials;
+use App\Models\familymembers;
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class patient extends Model
 {
@@ -18,6 +21,7 @@ class patient extends Model
         'assigned_room_id',
         'registration_date'
     ];
+    public $timestamps = false;
     protected $table = 'patients';
 
     // This is to show all appointments belonging to the patient
@@ -29,6 +33,21 @@ class patient extends Model
     public function fin()
     {
         return $this->belongsToMany(financials::class,"id","patient_id");
+    }
+
+    public function familyMembers()
+    {
+        return $this->hasMany(familymembers::class);
+    }
+
+    public function que()
+    {
+        return $this->hasOne(quemodel::class,"patient_id","id");
+    }
+
+    public function room()
+    {
+        return $this->hasOne(roommodel::class,"roomnumber","assigned_room_id");
     }
 
     public function queue()
