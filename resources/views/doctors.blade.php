@@ -136,6 +136,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($app as $ap)
+                                    @if($ap->pat->approval_state==1)
                                         <tr id="{{ $ap->id }}">
                                             <td>
                                                 <select id="s{{ $ap->id }}" class="form-select">
@@ -155,13 +156,14 @@
                                                     class="form-control">{{ $ap->reason }}</textarea>
                                             </td>
                                             <td>
-                                                <input type="button" value="Adapt" class="btn btn-warning"
+                                                <input type="button" value="Pas aan" class="btn btn-warning"
                                                     onclick="updateData({{ $ap->id }})" />
                                             </td>
                                             <td>
                                                 <button class="btn btn-danger" onclick="deleteAppointment({{ $ap->id }})">Delete</button>
                                             </td>
                                         </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>

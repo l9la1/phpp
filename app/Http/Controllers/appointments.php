@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\patient;
 use App\Models\appointment;
 use Illuminate\Http\Request;
@@ -11,9 +12,8 @@ class appointments extends Controller
 {
     public function getAppointments()
     {
-        $app = new appointment();
-        $pat = new patient;
-        return view("doctors", ['app' => $app->orderBy("appointment_date")->get(), "patient" => $pat->orderBy("name")->get()]);
+        $currentTime = Carbon::now()->setTimezone('Europe/Amsterdam');
+        return view("doctors", ['app' => appointment::where("appointment_date",">=",$currentTime->toDateTimeString())->orderBy("appointment_date")->get(), "patient" => patient::orderBy("name")->where("approval_state",1)->get()]);
     }
 
     // This is to addapt an appointment of the doctor
