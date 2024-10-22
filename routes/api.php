@@ -31,11 +31,12 @@ Route::get("/deleteApp/{id}",[appointments::class,"deleteAppointment"]);
 Route::prefix("administrator")->group(function(){
 Route::get("/assign_room/{room_id}/{patient_id}",[queuecontroler::class,"addPatientAndAssignRoom"]);
 Route::get("/removeQueue/{id}",[queuecontroler::class,"removeOutOfQueue"]);
-Route::get("/changeApp/{id}/{date}/{doctor}",[appointment::class,"changeApp"]);
-Route::get("/deleteApp/{id}",[appointment::class,"deleteApp"]);
+Route::get("/changeApp/{id}/{date}/{doctor}",[appointments::class,"changeApp"]);
+Route::get("/deleteApp/{id}",[appointments::class,"deleteApp"]);
 Route::get("/setPriority/{id}/{priority}",[queuecontroler::class,"updatePriority"]);
 Route::post("/change_patient",[patients::class,"changePatient"]);
 Route::get("/delete_patient/{id}",[patients::class,"deletePatient"]);
 Route::post("/change_family",[familycontroller::class,"addaptFamily"]);
 Route::get("/delete_fam/{id}",[familycontroller::class,"deleteFam"]);
+Route::post("/addFamily",[familycontroller::class,"addMember"]);
 });

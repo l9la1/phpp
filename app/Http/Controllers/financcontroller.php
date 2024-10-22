@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class financcontroller extends Controller
 {
+    // This is to add a new invoice for a client
     function addInvoices(Request $req)
     {
         $req->validate([
