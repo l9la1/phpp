@@ -16,6 +16,7 @@ class appointments extends Controller
         return view("doctors", ['app' => $app->orderBy("appointment_date")->get(), "patient" => $pat->orderBy("name")->get()]);
     }
 
+    // This is to addapt an appointment of the doctor
     public function addapt_Appointment(Request $req)
     {
         try {
@@ -40,6 +41,7 @@ class appointments extends Controller
         }
     }
 
+    // THis is to add a new appointment
     public function addApointment(Request $req)
     {
         try {
@@ -62,6 +64,7 @@ class appointments extends Controller
         }
     }
 
+    // This is to delete a appointment
     public function deleteApointment($id)
     {
         if(is_int((int)$id))
