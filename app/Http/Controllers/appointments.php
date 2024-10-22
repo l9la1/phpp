@@ -88,6 +88,6 @@ class appointments extends Controller
        public function deleteApp($id)
        {
            appointment::findOrFail($id)->delete();
-           return response()->json(["suc" => "succesvol aangepast"]);
+           return response()->json(["suc" => "succesvol verwijderd"]);
        }
 }

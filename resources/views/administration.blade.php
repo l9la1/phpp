@@ -250,7 +250,11 @@ addapt them
     function deleteAppoint(id) {
         if (confirm("Ben je zeker ervan om de afspraak te verwijderen")) {
             fetch("/api/administrator/deleteApp/" + id).then(er => {
-                showMess(er);
+                showMess(er,function(){
+                    $("#"+id).hide("slow","linear",function(){
+                        $("#"+id).empty();
+                    });
+                });
             });
         }
     }
