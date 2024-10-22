@@ -1,6 +1,7 @@
 body {
     background-color: #e9ecef; /* Slightly darker background */
     color: #343a40; /* Darker text color */
+    scroll-behavior: smooth;
 }
 
 .container {

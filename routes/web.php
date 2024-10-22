@@ -26,7 +26,6 @@ Route::post("/",[appointments::class,"addapt_Appointment"]);
 
 Route::prefix("administrator")->group(function(){
 Route::get("/{what}",[queuecontroler::class,"showQueue"]);
-Route::post("/addFamily",[familycontroller::class,"addMember"]);
 Route::post("/addInvoice",[financcontroller::class,"addInvoices"]);
 });
 

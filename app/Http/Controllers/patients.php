@@ -15,23 +15,26 @@ class patients extends Controller
 {
     public function index()
     {
-        return view("patients", ['financial' => financials::where("patient_id", 1)->limit(5)->get(),
-         'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get()]);
+        return view("patients", [
+            'financial' => financials::where("patient_id", 2)->orderBy("id","desc")->limit(5)->get(),
+            'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get()
+        ]);
     }
 
+    // To store the addapted data in the db
     public function changePatient(Request $req)
     {
         try {
+            // Validate the request
             $req->validate([
                 "id" => "integer|required",
                 "address" => "required|max:20",
-                "phone" => "required|max:10|min:10",
+                "phone" => "required|digits:10|integer",
                 "roomNm" => "required|integer"
             ]);
-
             $pat = patient::findOrFail($req->id);
-            $room = roommodel::find( $pat->assigned_room_id,"id");
-            if ($room !=null) {
+            $room = roommodel::find($pat->assigned_room_id, "id");
+            if ($room != null) {
                 $room->status = "free";
                 $room->save();
             }
@@ -39,16 +42,19 @@ class patients extends Controller
             $pat->phonenumber = $req->phone;
             $pat->assigned_room_id = $req->roomNm;
             $pat->save();
-
-            $rooms = roommodel::find( $req->roomNm,"id");
-            $rooms->status = "bezet";
-            $rooms->save();
+            // Check if not extern
+            if ($req->roomNm != -1) {
+                $rooms = roommodel::find($req->roomNm, "roomnumber");
+                $rooms->status = "bezet";
+                $rooms->save();
+            }
             return response()->json(["suc" => "successvol aangepast"]);
         } catch (ValidationException $er) {
             return response()->json(["err" => $er->errors()]);
         }
     }
 
+    // Delete a patient
     public function deletePatient($id)
     {
         patient::findOrFail($id)->delete();
@@ -78,7 +84,7 @@ class patients extends Controller
         // Add patient to the queue
         queue::create([
             'patient_id' => $patient->id, // Set patient ID
-            'priority' => 0, // Set priority, default is 1
+            'priority' => 0, // Set priority, default is 0
             'status' => 0,   // Status: waiting
         ]);
 
