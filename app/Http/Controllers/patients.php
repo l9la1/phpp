@@ -15,7 +15,8 @@ class patients extends Controller
 {
     public function index()
     {
-        return view("patients", ['financial' => financials::where("patient_id", 1)->limit(5)->get(), 'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get()]);
+        return view("patients", ['financial' => financials::where("patient_id", 1)->limit(5)->get(),
+         'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get()]);
     }
 
     public function changePatient(Request $req)
@@ -82,11 +83,6 @@ class patients extends Controller
         ]);
 
         return redirect()->route('patients.store');
-    }
-
-    public function login()
-    {
-        return view('login');
     }
 
 

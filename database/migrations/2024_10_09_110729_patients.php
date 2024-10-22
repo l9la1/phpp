@@ -16,11 +16,12 @@ return new class extends Migration
             $table->foreign('login_id')->references('login_id')->on('users')->onDelete('cascade');
             $table->text('name');
             $table->text('address');
-            $table->text(column: 'phonenumber');
+            $table->text('phonenumber');
             $table->date('date_of_birth');
-            $table->boolean('approval_state');
-            $table->integer('assigned_room_id');
-            $table->date('registration_date');
+            $table->boolean('approval_state')->default(false);
+            $table->integer('assigned_room_id')->nullable();
+            $table->date('registration_date')->useCurrent();
+            $table->timestamps();
         });
     }
 

@@ -24,7 +24,7 @@
             <input type="text" name="address" required>
             
             <label for="phonenumber">Phone Number:</label>
-            <input type="text" name="phonenumber" required pattern="\d{10}">
+            <input type="text" name="phonenumber" required>
 
             <label for="date_of_birth">Date of Birth:</label>
             <input type="date" name="date_of_birth" required>

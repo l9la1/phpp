@@ -2,29 +2,57 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\financials;
+use App\Models\familymembers;
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class patient extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'Patient_id',
-        'Name',
-        'Address',
+        'name',  // should match the actual field name in the table
+        'address',  // should match the actual field name in the table
         'phonenumber',
         'date_of_birth',
-        'ApprovalState',
-        'AssignedRoomID',
-        'registrationDate'
+        'approval_state',
+        'assigned_room_id',
+        'registration_date'
     ];
+    public $timestamps = false;
     protected $table = 'patients';
 
     // This is to show all appointments belonging to the patient
     public function appoint()
     {
-        return $this->hasMany(appointment::class,"Patient_id","Patient_id");
+        return $this->hasMany(appointment::class,"patient_id","id");
+    }
+
+    public function fin()
+    {
+        return $this->hasMany(financials::class,"id","patient_id");
+    }
+
+    public function familyMembers()
+    {
+        return $this->hasMany(familymembers::class);
+    }
+
+    public function que()
+    {
+        return $this->hasOne(quemodel::class,"patient_id","id");
+    }
+
+    public function room()
+    {
+        return $this->hasOne(roommodel::class,"roomnumber","assigned_room_id");
+    }
+
+    public function queue()
+    {
+        return $this->hasOne(Queue::class);
     }
 
     public function user()

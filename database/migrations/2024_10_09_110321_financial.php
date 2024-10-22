@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('patient_id');
             $table->double('hire_cost',10,2);
             $table->double('caretaking_costs',10,2);
-            $table->boolean('payed');
+            $table->boolean('payed')->default(0);
         });
     }
 
