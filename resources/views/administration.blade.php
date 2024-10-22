@@ -478,7 +478,9 @@ remove client
         fetch("/api/administrator/addFamily", {
             method: "POST",
             body: data,
-        }, ).then(err => showMess(err));
+        }, ).then(err => showMess(err,function(){
+                location.reload();
+            }));
     }
 
     // To search through the clients not through the family data
