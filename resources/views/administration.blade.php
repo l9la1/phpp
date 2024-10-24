@@ -191,7 +191,7 @@ addapt them
                 <td>
                     <select id="s{{ $ap->id }}" class="form-control">
                         @foreach ($doctor as $d)
-                            <option @if ($d->id == $ap->doc->id) selected value="{{ $d->id }}" @endif>
+                            <option @if ($d->id == $ap->doc->id) selected  @endif value="{{ $d->id }}">
                                 {{ $d->name }}</option>
                         @endforeach
                     </select>
@@ -245,8 +245,18 @@ addapt them
 
     // To save the changed appointment
     function changeAppoint(id) {
-        fetch("/api/administrator/changeApp/" + id + "/" + encodeURIComponent($("#d" + id).val()) + "/" + $("#s" + id)
-            .val()).then(er => {
+        fetch("/api/administrator/changeApp/", {
+            method: "post",
+            body: JSON.stringify({
+                id: id,
+                date: $("#d" + id).val(),
+                doctor: $("#s" + id).val()
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }).then(er => {
             showMess(er);
         })
 
@@ -681,10 +691,10 @@ create new invoices
     <div class="col-6">
         <div id="messages" class="container mt-3 alert"
             style="display:none; border-radius: 8px; font-weight: bold;"></div>
-            <h3 class="text-center"
-                style="background-color:#6c757d; color: #fff; padding: 15px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                Bestaande Facaturen
-            </h3>
+        <h3 class="text-center"
+            style="background-color:#6c757d; color: #fff; padding: 15px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            Bestaande Facaturen
+        </h3>
         <table class="table table-bordered table-hover table-striped text-center align-middle" id="pTable">
             <thead class="thead-dark">
                 <tr>
@@ -769,12 +779,13 @@ create new invoices
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        var mes= $("#mes");
-        if(mes)
+        var mes = $("#mes");
+        if (mes)
             setTimeout(() => {
-                mes.hide("slow","linear");
+                mes.hide("slow", "linear");
             }, 2000);
     });
+
     function addaptRoom(id) {
         fetch("/api/administrator/update_room", {
             method: "POST",
@@ -796,8 +807,8 @@ create new invoices
         if (confirm('Ben je zeker om de kamer te verwijderen'))
             fetch("/api/administrator/remove_room/" + id).then(res => {
                 showMess(res, function() {
-                    $("#tr"+id).hide("slow","linear",function(){
-                        $("#tr"+id).empty();
+                    $("#tr" + id).hide("slow", "linear", function() {
+                        $("#tr" + id).empty();
                     });
                 });
             });

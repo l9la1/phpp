@@ -17,7 +17,13 @@ class financcontroller extends Controller
         $req->validate([
             "patient"=>"required|integer",
             "caretaking"=>"required|between:0,999999999999.99",
-        ]);
+        ],
+    [
+        "patient.required"=>"De patient is verplicht",
+        "patient.integer"=>"De patient moet een nummer zijn",
+        "caretaking.required"=>"De ziektekosten is een verplicht veld",
+        "caretaking.between"=>"De ziektekosten moeten tussen de 0 en 999999999999,99"
+    ]);
         $pt=patient::findOrFail($req->patient);
         if($pt->assigned_room_id!=-1)
             $hire=roommodel::findOrfail($pt->assigned_room_id)->price;

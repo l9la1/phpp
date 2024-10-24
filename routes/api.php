@@ -31,7 +31,7 @@ Route::get("/deleteApp/{id}",[appointments::class,"deleteAppointment"]);
 Route::prefix("administrator")->group(function(){
 Route::get("/assign_room/{room_id}/{patient_id}",[queuecontroler::class,"addPatientAndAssignRoom"]);
 Route::get("/removeQueue/{id}",[queuecontroler::class,"removeOutOfQueue"]);
-Route::get("/changeApp/{id}/{date}/{doctor}",[appointments::class,"changeApp"]);
+Route::post("/changeApp",[appointments::class,"changeApp"]);
 Route::get("/deleteApp/{id}",[appointments::class,"deleteApp"]);
 Route::get("/setPriority/{id}/{priority}",[queuecontroler::class,"updatePriority"]);
 Route::post("/change_patient",[patients::class,"changePatient"]);

@@ -21,9 +21,9 @@ class queuecontroler extends Controller
                 "queue" => quemodel::orderBy("priority", "desc")->orderBy("id")->get(),
                 "pat" => patient::where("approval_state", "0")->get(),
                 "rooms" => roommodel::get(),
-                "app" => appointment::where("appointment_date", ">=", Carbon::now())->orderby("appointment_date")->get(),
+                "app" => appointment::where("appointment_date", ">=", Carbon::now()->setTimezone('Europe/Amsterdam'))->orderby("appointment_date")->get(),
                 "doctor" => doctor::get(),
-                "finance"=>financials::get(),
+                "finance" => financials::get(),
                 "what" => $what
             ]);
     }
@@ -44,7 +44,7 @@ class queuecontroler extends Controller
                     $pat->approval_state = 1;
                     $pat->save();
 
-                    $room = roommodel::find( $room_num,"id");
+                    $room = roommodel::find($room_num, "id");
                     $room->status = "bezet";
                     $room->save();
                 }
@@ -64,11 +64,10 @@ class queuecontroler extends Controller
         return response()->json(["suc" => "Succesvol verwijderd"]);
     }
 
-    public function updatePriority($id,$priority)
+    public function updatePriority($id, $priority)
     {
         $qu = quemodel::findOrFail($id);
-        $qu->priority=$priority;
+        $qu->priority = $priority;
         $qu->save();
-
     }
 }

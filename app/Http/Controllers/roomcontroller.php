@@ -12,18 +12,30 @@ class roomcontroller extends Controller
     function addaptRoom(Request $req)
     {
         try {
-            $req->validate([
-                "id" => "integer|required",
-                "bedAmount" => "integer|required|max:2|min:1",
-                "price" => "required|between:0.01,9999999999.99"
-            ]);
-            $rm=roommodel::findOrFail($req->id);
-            if($rm->status=="bezet")
-                return response()->json(["err"=>"Deze kamer is niet te bewerken"]);
-            $rm->bed_amount=$req->bedAmount;
-            $rm->price=$req->price;
+            $req->validate(
+                [
+                    "id" => "integer|required",
+                    "bedAmount" => "integer|required|max:2|min:1",
+                    "price" => "required|between:0.01,9999999999.99"
+                ],
+                [
+                    "id.integer" => "De id moet een nummer zijn",
+                    "id.required" => "De id veld is verplicht",
+                    "bedAmount.integer" => "De aantal bedden moeten een nummer zijn",
+                    "bedAmount.required" => "De bed aantal is verplicht",
+                    "bedAmount.max" => "Max hoeveeheid personen kamer is twee",
+                    "bedAmount.min" => "Minimaal 1 persoons kamer",
+                    "price.required" => "De prijs is een verplichte veld",
+                    "price.between" => "Het bedrag moet tussen 0,01 en 9999999999,99"
+                ]
+            );
+            $rm = roommodel::findOrFail($req->id);
+            if ($rm->status == "bezet")
+                return response()->json(["err" => "Deze kamer is niet te bewerken"]);
+            $rm->bed_amount = $req->bedAmount;
+            $rm->price = $req->price;
             $rm->save();
-            return response()->json(["suc"=>"Kamer is succesvol aangepast"]);
+            return response()->json(["suc" => "Kamer is succesvol aangepast"]);
         } catch (ValidationException $ex) {
             return response()->json(["err" => $ex->errors()]);
         }
@@ -31,23 +43,33 @@ class roomcontroller extends Controller
 
     function addRoom(Request $req)
     {
-        $req->validate([
-            "price"=>"required|between:0.01,9999999999.99",
-            "bedamount"=>"required|min:1|max:2|integer"
-        ]);
+        $req->validate(
+            [
+                "price" => "required|between:0.01,9999999999.99",
+                "bedamount" => "required|min:1|max:2|integer"
+            ],
+            [
+                "price.required" => "De prijs veld is verplicht",
+                "price.between" => "De prijs moet tussen 0,01 en 9999999999,99",
+                "bedAmount.integer" => "De aantal bedden moeten een nummer zijn",
+                "bedAmount.required" => "De bed aantal is verplicht",
+                "bedAmount.max" => "Max hoeveeheid personen kamer is twee",
+                "bedAmount.min" => "Minimaal 1 persoons kamer",
+            ]
+        );
 
         $rm = new roommodel;
-        $rm->roomnumber=3;
-        $rm->status="free";
-        $rm->price=$req->price;
-        $rm->bed_amount=$req->bedamount;
+        $rm->roomnumber = 3;
+        $rm->status = "free";
+        $rm->price = $req->price;
+        $rm->bed_amount = $req->bedamount;
         $rm->save();
-        return redirect()->back()->with("success","De kamer is succesvol toegevoegd");
+        return redirect()->back()->with("success", "De kamer is succesvol toegevoegd");
     }
 
     function removeRoom($id)
     {
         roommodel::findOrFail($id)->delete();
-        return response()->json(["suc"=>"De kamer is verwijderd"]);
+        return response()->json(["suc" => "De kamer is verwijderd"]);
     }
 }

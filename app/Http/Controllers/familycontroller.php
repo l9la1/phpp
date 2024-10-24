@@ -18,7 +18,14 @@ class familycontroller extends Controller
             $req->validate([
                 "id" => "required|integer",
                 "phone" => "required|digits:10|integer"
-            ]);
+            ],
+        [
+            "id.required"=>"De id veld is verplicht",
+            "id.integer"=>"De id moet een nummer zijn",
+            "phone.required"=>"De telefoon is verplicht",
+            "phone.digits"=>"De telefoon moet 10 digits lang zijn",
+            "phone.integer"=>"De telefoon moet een nummer zijn"
+        ]);
 
             $fam = familymembers::findOrFail($req->id);
             $fam->contact_number = $req->phone;
@@ -46,7 +53,18 @@ class familycontroller extends Controller
                 "phone" => "required|digits:10|integer",
                 "relation" => "required|max:20",
                 "name" => "required|max:20"
-            ]);
+            ],
+        [
+            "ptid.required"=>"De patient id is verplicht",
+            "ptid.integer"=>"De patient id moet een nummer zijn",
+            "phone.required"=>"De telefoon is verplicht",
+            "phone.digits"=>"De telefoon moet 10 digits lang zijn",
+            "phone.integer"=>"De telefoon moet een nummer zijn",
+            "relation.required"=>"De relatie is verplicht",
+            "relation.max"=>"De relatie mag maximaal 20 characters lang zijn",
+            "name.required"=>"De naam is verplicht",
+            "name.max"=>"De naam mag maximaal 20 characters zijn"
+        ]);
             // Check if there aren't two family members because you can only have two family members per client
             if (patient::where("id", $req->ptid)->count() < 2) {
                 $fam = new familymembers();
