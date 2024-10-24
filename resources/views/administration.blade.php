@@ -2,11 +2,13 @@
 <html lang="en">
 
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>administratie</title>
 </head>
 
@@ -26,6 +28,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="invoice">facaturen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="room">kamers</a>
                     </li>
                 </ul>
             </div>
@@ -83,7 +88,8 @@
                             <td><button class="btn btn-warning btn-sm text-white"
                                     onclick="makePatient({{ $que->pat->id }})">Verplaats</button></td>
                             <td><button class="btn btn-danger btn-sm"
-                                    onclick="removeFromQueue({{ $que->id }},{{ $que->pat->id }})">Verwijder</button>
+                                    onclick="removeFromQueue({{ $que->id }},{{ $que->pat->id }})"><i
+                                        class="bi bi-trash"></i></button>
                             </td>
                         </tr>
                     @endforeach
@@ -185,7 +191,7 @@ addapt them
                 <td>
                     <select id="s{{ $ap->id }}" class="form-control">
                         @foreach ($doctor as $d)
-                            <option @if ($d->id == $ap->doc->id) selected value="{{ $d->id }}" @endif>
+                            <option @if ($d->id == $ap->doc->id) selected  @endif value="{{ $d->id }}">
                                 {{ $d->name }}</option>
                         @endforeach
                     </select>
@@ -196,7 +202,7 @@ addapt them
                 <td><button class="btn btn-warning btn-sm" style="color: #fff;"
                         onclick="changeAppoint({{ $ap->id }})">Pas Aan</button></td>
                 <td><button class="btn btn-danger btn-sm" style="color: #fff;"
-                        onclick="deleteAppoint({{ $ap->id }})">Verwijder Afspraak</button></td>
+                        onclick="deleteAppoint({{ $ap->id }})"><i class="bi bi-trash"></i></button></td>
             </tr>
         @endforeach
     </tbody>
@@ -239,8 +245,18 @@ addapt them
 
     // To save the changed appointment
     function changeAppoint(id) {
-        fetch("/api/administrator/changeApp/" + id + "/" + encodeURIComponent($("#d" + id).val()) + "/" + $("#s" + id)
-            .val()).then(er => {
+        fetch("/api/administrator/changeApp/", {
+            method: "post",
+            body: JSON.stringify({
+                id: id,
+                date: $("#d" + id).val(),
+                doctor: $("#s" + id).val()
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }).then(er => {
             showMess(er);
         })
 
@@ -250,7 +266,11 @@ addapt them
     function deleteAppoint(id) {
         if (confirm("Ben je zeker ervan om de afspraak te verwijderen")) {
             fetch("/api/administrator/deleteApp/" + id).then(er => {
-                showMess(er);
+                showMess(er, function() {
+                    $("#" + id).hide("slow", "linear", function() {
+                        $("#" + id).empty();
+                    });
+                });
             });
         }
     }
@@ -265,8 +285,7 @@ addapt client
 addapt the family of the client
 remove client
 -->
-<div id="messages" class="container mt-3 alert alert-success"
-    style="display:none; border-radius: 8px; font-weight: bold;"></div>
+<div id="messages" class="container mt-3 alert" style="display:none; border-radius: 8px; font-weight: bold;"></div>
 <div class="input-group mb-3">
     <input type="text" placeholder="Zoek mensen op de wachtlijst" class="form-control" id="search"
         style="border-radius: 5px; box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);"
@@ -281,8 +300,7 @@ remove client
             <th>geboortedatum</th>
             <th>kamer nummer</th>
             <th>familie</th>
-            <th>pas aan</th>
-            <th>verwijder patient</th>
+            <th></th>
         </tr>
     <tbody>
         @foreach ($pat as $pt)
@@ -298,8 +316,13 @@ remove client
                     <select class="form-control" id="s{{ $pt->id }}">
                         <option value="-1" @if ($pt->assigned_room_id == -1) selected @endif>extern</option>
                         @foreach ($rooms as $rm)
-                            <option value={{ $rm->id }} @if ($rm->id == $pt->assigned_room_id) selected @endif>
-                                {{ $rm->roomnumber }}</option>
+                            @if ($rm->id == $pt->assigned_room_id)
+                                <option value={{ $rm->id }} selected>
+                                    {{ $rm->roomnumber }}</option>
+                            @elseif($rm->status == 'free')
+                                <option value={{ $rm->id }}>
+                                    {{ $rm->roomnumber }}</option>
+                            @endif
                         @endforeach
                     </select>
                 </td>
@@ -334,7 +357,8 @@ remove client
                                             <button class="btn btn-warning"
                                                 onclick="changeFam({{ $pt->familyMembers[0]->id }})">pas aan</button>
                                             <button class="btn btn-danger"
-                                                onclick="removeFam({{ $pt->familyMembers[0]->id }})">verwijder</button>
+                                                onclick="removeFam({{ $pt->familyMembers[0]->id }})"><i
+                                                    class="bi bi-trash"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -406,7 +430,8 @@ remove client
                                             <button class="btn btn-warning"
                                                 onclick="changeFam({{ $pt->familyMembers[1]->id }})">pas aan</button>
                                             <button class="btn btn-danger"
-                                                onclick="removeFam({{ $pt->familyMembers[1]->id }})">verwijder</button>
+                                                onclick="removeFam({{ $pt->familyMembers[1]->id }})"><i
+                                                    class="bi bi-trash"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -454,10 +479,14 @@ remove client
                             @endif
                         </div>
                 </td>
-                <td><button class="btn btn-warning btn-sm" onclick="addaptPatient({{ $pt->id }})">pas
-                        aan</button></td>
-                <td><button class="btn btn-danger btn-sm" onclick="removePatient({{ $pt->id }})">verwijder
-                        patient</button></td>
+                <td>
+                    <ul class="action-list">
+                        <li><button class="btn btn-primary" onclick="addaptPatient({{ $pt->id }})"><i
+                                    class="bi bi-pencil"></i></button></li>
+                        <li><button class="btn btn-danger" onclick="removePatient({{ $pt->id }})"><i
+                                    class="bi bi-trash"></i></button></li>
+                    </ul>
+                </td>
             </tr>
         @endforeach
     </tbody>
@@ -478,9 +507,13 @@ remove client
         fetch("/api/administrator/addFamily", {
             method: "POST",
             body: data,
-        }, ).then(err => showMess(err,function(){
-                location.reload();
-            }));
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }, ).then(err => showMess(err, function() {
+            location.reload();
+        }));
     }
 
     // To search through the clients not through the family data
@@ -518,7 +551,11 @@ remove client
                 address: $("#a" + id).val(),
                 roomNm: $("#s" + id).val(),
                 phone: $("#p" + id).val()
-            })
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
         }).then(mess => {
             showMess(mess);
         });
@@ -616,7 +653,6 @@ create new invoices
             <div class="card-body" style="background-color: #f9f9f9;">
                 <form action="addInvoice" method="post">
                     @csrf
-
                     <div class="mb-3">
                         @error('patient')
                             <div class="text-danger">{{ $message }}</div>
@@ -627,15 +663,6 @@ create new invoices
                                 <option value="{{ $pt->id }}">{{ $pt->name }}</option>
                             @endforeach
                         </select>
-                    </div>
-
-                    <div class="mb-3">
-                        @error('hiring')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        <label class="form-label" style="color: #495057;">Huur Kosten</label>
-                        <input type="number" value="0.00" step=".01" class="form-control" name="hiring"
-                            style="border-radius: 5px;" />
                     </div>
 
                     <div class="mb-3">
@@ -656,7 +683,137 @@ create new invoices
         </div>
     </div>
 </div>
+</body>
 
+</html>
+@elseif('rooms')
+<div class="row ps-5 pe-5 pt-2">
+    <div class="col-6">
+        <div id="messages" class="container mt-3 alert"
+            style="display:none; border-radius: 8px; font-weight: bold;"></div>
+        <h3 class="text-center"
+            style="background-color:#6c757d; color: #fff; padding: 15px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            Bestaande Facaturen
+        </h3>
+        <table class="table table-bordered table-hover table-striped text-center align-middle" id="pTable">
+            <thead class="thead-dark">
+                <tr>
+                    <td>#</td>
+                    <td>hoeveel personen kamer</td>
+                    <td>price</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($rooms as $rm)
+                    <tr id="tr{{ $rm->id }}">
+                        @if ($rm->status == 'bezet')
+                            <td>{{ $rm->id }}</td>
+                            <td>{{ $rm->bed_amount }}</td>
+                            <td>€ {{ number_format($rm->price, 2, ',', '.') }}</td>
+                            <td></td>
+                        @else
+                            <td>{{ $rm->id }}</td>
+                            <td><input type="number" value="{{ $rm->bed_amount }}" id="b{{ $rm->id }}"
+                                    max="2" min="1" /></td>
+                            <td>€<input type="number" step="0.01" value="{{ $rm->price }}"
+                                    id="p{{ $rm->id }}" /></td>
+                            <td>
+                                <ul class="action-list">
+                                    <li><button class="btn btn-primary" onclick="addaptRoom({{ $rm->id }})"><i
+                                                class="bi bi-pencil"></i></button></li>
+                                    <li><button class="btn btn-danger" onclick="removeRoom({{ $rm->id }})"><i
+                                                class="bi bi-trash"></i></button></li>
+                                </ul>
+                            </td>
+                        @endif
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div class="col-6">
+        @if (Session::has('success'))
+            <div class="alert alert-success" id="mes">
+                {{ Session::get('success') }}
+            </div>
+        @endif
+        <form method="post" action="addRoom">
+            @csrf
+            <div class="card">
+                <div class="card-header text-center text-capitalize">
+                    <h3>maak nieuwe kamer</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Hoeveel personen kamer</label>
+                        @error('bedamount')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <input type="number" min="1" max="2" value="1" name="bedamount"
+                            class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Prijs</label>
+                        @error('price')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <input type="number" step="0.01" value="0.01" min="0.01" name="price"
+                            class="form-control" required />
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input type="submit" value="voeg kamer toe" class="btn btn-success w-100" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+    integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ asset('js/apiResponse.js') }}"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var mes = $("#mes");
+        if (mes)
+            setTimeout(() => {
+                mes.hide("slow", "linear");
+            }, 2000);
+    });
+
+    function addaptRoom(id) {
+        fetch("/api/administrator/update_room", {
+            method: "POST",
+            body: JSON.stringify({
+                id: id,
+                bedAmount: $("#b" + id).val(),
+                price: $("#p" + id).val()
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }).then(res => {
+            showMess(res);
+        })
+    }
+
+    function removeRoom(id) {
+        if (confirm('Ben je zeker om de kamer te verwijderen'))
+            fetch("/api/administrator/remove_room/" + id).then(res => {
+                showMess(res, function() {
+                    $("#tr" + id).hide("slow", "linear", function() {
+                        $("#tr" + id).empty();
+                    });
+                });
+            });
+    }
+</script>
 </body>
 
 </html>

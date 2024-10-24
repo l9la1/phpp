@@ -3,10 +3,11 @@
 use App\Http\Controllers\patients;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\appointments;
+use App\Http\Controllers\queuecontroler;
+use App\Http\Controllers\roomcontroller;
+use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\familycontroller;
 use App\Http\Controllers\financcontroller;
-use App\Http\Controllers\queuecontroler;
-use Illuminate\Support\Facades\Redirect;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ Route::post("/",[appointments::class,"addapt_Appointment"]);
 Route::prefix("administrator")->group(function(){
 Route::get("/{what}",[queuecontroler::class,"showQueue"]);
 Route::post("/addInvoice",[financcontroller::class,"addInvoices"]);
+Route::post("/addRoom",[roomcontroller::class,"addRoom"]);
 });
 
 Route::prefix("patient")->group(function(){

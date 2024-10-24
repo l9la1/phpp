@@ -16,7 +16,7 @@ class patients extends Controller
     public function index()
     {
         return view("patients", [
-            'financial' => financials::where("patient_id", 2)->orderBy("id","desc")->limit(5)->get(),
+            'financial' => financials::where("patient_id", 2)->orderBy("id", "desc")->limit(5)->get(),
             'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get()
         ]);
     }
@@ -26,14 +26,30 @@ class patients extends Controller
     {
         try {
             // Validate the request
-            $req->validate([
-                "id" => "integer|required",
-                "address" => "required|max:20",
-                "phone" => "required|digits:10|integer",
-                "roomNm" => "required|integer"
-            ]);
+            $req->validate(
+                [
+                    "id" => "integer|required",
+                    "address" => "required|max:20",
+                    "phone" => "required|digits:10|integer",
+                    "roomNm" => "required|integer"
+                ],
+                [
+                    "id.required" => "De id veld is verplicht",
+                    "id.integer" => "De id moet een nummer zijn",
+                    "address.required" => "De adres is een verplicht veld",
+                    "address.max" => "De adres mag maar maximaal 20 characters lang zijn",
+                    "phone.required" => "De telefoon is een verplicht veld",
+                    "phone.digits" => "Het moet een 10 lange nummer zijn",
+                    "phone.integer" => "Het telefoonnummer moet een nummer zijn",
+                    "roomNm.required" => "De ruimtenummer is verplicht",
+                    "roomNm.integer" => "De ruimtenummer moet een nummer zijn"
+                ]
+            );
             $pat = patient::findOrFail($req->id);
-            $room = roommodel::find($pat->assigned_room_id, "id");
+            $rm = roommodel::find($req->roomNm);
+            if ($pat->assigned_room_id != $req->roomNm && $rm != null &&  $rm->status == "bezet")
+                return response()->json(["err" => "de kamer is al bezet"]);
+            $room = roommodel::find($pat->assigned_room_id);
             if ($room != null) {
                 $room->status = "free";
                 $room->save();
@@ -44,7 +60,7 @@ class patients extends Controller
             $pat->save();
             // Check if not extern
             if ($req->roomNm != -1) {
-                $rooms = roommodel::find($req->roomNm, "roomnumber");
+                $rooms = roommodel::find($req->roomNm);
                 $rooms->status = "bezet";
                 $rooms->save();
             }
@@ -69,12 +85,25 @@ class patients extends Controller
     public function store(Request $request)
     {
         // Validate form input
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'phonenumber' => 'required|string',
-            'date_of_birth' => 'required|date',
-        ]);
+        $validatedData = $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'address' => 'required|string',
+                'phonenumber' => 'required|string',
+                'date_of_birth' => 'required|date',
+            ],
+            [
+                "name.required" => "De naam veld is verplicht",
+                "name.string" => "De naam moet een string zijn",
+                "name.max" => "De naam mag maximaal 255 zijn",
+                "address.required" => "De adres is een verplicht veld",
+                "address.max" => "De adres mag maar maximaal 20 characters lang zijn",
+                "phonenumber.required"=>"De telefoonnummer is verplicht",
+                "phonenumber.string"=>"De telefoonnummer moet een string zijn",
+                "date_of_birth.required"=>"De geboortedatum is een verplicht veld",
+                "date_of_birth.date"=>"De geboortedatum moet een datum zijn"
+            ]
+        );
 
         $validatedData['registration_date'] = now();
 
