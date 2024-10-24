@@ -16,7 +16,7 @@ class patients extends Controller
     public function index()
     {
         return view("patients", [
-            'financial' => financials::where("patient_id", 2)->orderBy("id","desc")->limit(5)->get(),
+            'financial' => financials::where("patient_id", 2)->orderBy("id", "desc")->limit(5)->get(),
             'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get()
         ]);
     }
@@ -33,7 +33,10 @@ class patients extends Controller
                 "roomNm" => "required|integer"
             ]);
             $pat = patient::findOrFail($req->id);
-            $room = roommodel::find($pat->assigned_room_id, "id");
+            $rm = roommodel::find($req->roomNm);
+            if ($pat->assigned_room_id != $req->roomNm && $rm != null &&  $rm->status == "bezet")
+                return response()->json(["err" => "de kamer is al bezet"]);
+            $room = roommodel::find($pat->assigned_room_id);
             if ($room != null) {
                 $room->status = "free";
                 $room->save();
@@ -44,7 +47,7 @@ class patients extends Controller
             $pat->save();
             // Check if not extern
             if ($req->roomNm != -1) {
-                $rooms = roommodel::find($req->roomNm, "roomnumber");
+                $rooms = roommodel::find($req->roomNm);
                 $rooms->status = "bezet";
                 $rooms->save();
             }

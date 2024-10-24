@@ -13,6 +13,7 @@ class roommodel extends Model
         'roomnumber',
         'status',
         'bed_amount',
+        'price'
     ];
     protected $table = 'rooms';
     public $timestamps = false;

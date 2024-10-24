@@ -20,7 +20,7 @@ class queuecontroler extends Controller
             return view("administration", [
                 "queue" => quemodel::orderBy("priority", "desc")->orderBy("id")->get(),
                 "pat" => patient::where("approval_state", "0")->get(),
-                "rooms" => roommodel::where("status", "free")->get(),
+                "rooms" => roommodel::get(),
                 "app" => appointment::where("appointment_date", ">=", Carbon::now())->orderby("appointment_date")->get(),
                 "doctor" => doctor::get(),
                 "finance"=>financials::get(),

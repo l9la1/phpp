@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\appointment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\patients;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\appointments;
-use App\Http\Controllers\familycontroller;
 use App\Http\Controllers\queuecontroler;
+use App\Http\Controllers\roomcontroller;
+use App\Http\Controllers\familycontroller;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +39,6 @@ Route::get("/delete_patient/{id}",[patients::class,"deletePatient"]);
 Route::post("/change_family",[familycontroller::class,"addaptFamily"]);
 Route::get("/delete_fam/{id}",[familycontroller::class,"deleteFam"]);
 Route::post("/addFamily",[familycontroller::class,"addMember"]);
+Route::post("/update_room",[roomcontroller::class,"addaptRoom"]);
+Route::get("/remove_room/{id}",[roomcontroller::class,"removeRoom"]);
 });
