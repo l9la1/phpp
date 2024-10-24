@@ -716,7 +716,7 @@ create new invoices
                             <td>{{ $rm->id }}</td>
                             <td><input type="number" value="{{ $rm->bed_amount }}" id="b{{ $rm->id }}"
                                     max="2" min="1" /></td>
-                            <td>€<input type="number" step="0.01" value="{{ $rm->price }}"
+                            <td>€<input type="number" step="0.01" min="0.01" value="{{ $rm->price }}"
                                     id="p{{ $rm->id }}" /></td>
                             <td>
                                 <ul class="action-list">

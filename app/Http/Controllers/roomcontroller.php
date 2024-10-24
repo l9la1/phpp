@@ -16,7 +16,7 @@ class roomcontroller extends Controller
                 [
                     "id" => "integer|required",
                     "bedAmount" => "integer|required|max:2|min:1",
-                    "price" => "required|between:0.01,9999999999.99"
+                    "price" => "required|numeric|min:0.01|max:9999999999.99"
                 ],
                 [
                     "id.integer" => "De id moet een nummer zijn",
@@ -26,7 +26,9 @@ class roomcontroller extends Controller
                     "bedAmount.max" => "Max hoeveeheid personen kamer is twee",
                     "bedAmount.min" => "Minimaal 1 persoons kamer",
                     "price.required" => "De prijs is een verplichte veld",
-                    "price.between" => "Het bedrag moet tussen 0,01 en 9999999999,99"
+                    "price.numeric" => "Het bedrag moet een nummer zijn",
+                    "price.min" => "De prijs moet minimaal 0,01 zijn",
+                    "price.max" => "De prijs mag maximaal 9999999999,99"
                 ]
             );
             $rm = roommodel::findOrFail($req->id);
@@ -45,12 +47,13 @@ class roomcontroller extends Controller
     {
         $req->validate(
             [
-                "price" => "required|between:0.01,9999999999.99",
+                "price" => "required|numeric|min:0.01|max:9999999999.99",
                 "bedamount" => "required|min:1|max:2|integer"
             ],
             [
-                "price.required" => "De prijs veld is verplicht",
-                "price.between" => "De prijs moet tussen 0,01 en 9999999999,99",
+                "price.numeric" => "Het bedrag moet een nummer zijn",
+                "price.min" => "De prijs moet minimaal 0,01 zijn",
+                "price.max" => "De prijs mag maximaal 9999999999,99",
                 "bedamount.integer" => "De aantal bedden moeten een nummer zijn",
                 "bedamount.required" => "De bed aantal is verplicht",
                 "bedamount.max" => "Max hoeveeheid personen kamer is twee",
