@@ -59,7 +59,6 @@ class roomcontroller extends Controller
         );
 
         $rm = new roommodel;
-        $rm->roomnumber = 3;
         $rm->status = "free";
         $rm->price = $req->price;
         $rm->bed_amount = $req->bedamount;

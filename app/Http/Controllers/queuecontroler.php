@@ -38,13 +38,13 @@ class queuecontroler extends Controller
                 $pat->approval_state = 1;
                 $pat->save();
             } else {
-                if (roommodel::where("roomnumber", $room_num)->where("status", "free")->count() == 1 && patient::where("id", $pat_id)->count() == 1) {
+                if (roommodel::where("id", $room_num)->where("status", "free")->count() == 1 && patient::where("id", $pat_id)->count() == 1) {
                     $pat = patient::find($pat_id);
                     $pat->assigned_room_id = $room_num;
                     $pat->approval_state = 1;
                     $pat->save();
 
-                    $room = roommodel::find($room_num, "id");
+                    $room = roommodel::find($room_num);
                     $room->status = "bezet";
                     $room->save();
                 }
