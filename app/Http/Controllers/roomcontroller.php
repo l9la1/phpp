@@ -51,10 +51,10 @@ class roomcontroller extends Controller
             [
                 "price.required" => "De prijs veld is verplicht",
                 "price.between" => "De prijs moet tussen 0,01 en 9999999999,99",
-                "bedAmount.integer" => "De aantal bedden moeten een nummer zijn",
-                "bedAmount.required" => "De bed aantal is verplicht",
-                "bedAmount.max" => "Max hoeveeheid personen kamer is twee",
-                "bedAmount.min" => "Minimaal 1 persoons kamer",
+                "bedamount.integer" => "De aantal bedden moeten een nummer zijn",
+                "bedamount.required" => "De bed aantal is verplicht",
+                "bedamount.max" => "Max hoeveeheid personen kamer is twee",
+                "bedamount.min" => "Minimaal 1 persoons kamer",
             ]
         );
 
