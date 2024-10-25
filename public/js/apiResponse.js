@@ -38,7 +38,7 @@ function showMess(mess, callback = null) {
                         if (callback != null)
                             callback();
                     });
-                }, 1000);
+                }, 1500);
             })
         }
         document.getElementById('messages').scrollIntoView({ 

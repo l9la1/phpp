@@ -51,7 +51,7 @@
             <select class="form-control" id="rNumber" style="margin-bottom: 1rem;">
                 <option value="-1">Extern</option>
                 @foreach ($rooms as $room)
-                    <option value="{{ $room->roomnumber }}">{{ $room->roomnumber }}</option>
+                    <option value="{{ $room->id }}">{{ $room->id }}</option>
                 @endforeach
             </select>
             <button class="btn btn-success" style="width: 100%;" onclick="$('#roomnumber').hide()">Verplaats</button>
@@ -318,10 +318,10 @@ remove client
                         @foreach ($rooms as $rm)
                             @if ($rm->id == $pt->assigned_room_id)
                                 <option value={{ $rm->id }} selected>
-                                    {{ $rm->roomnumber }}</option>
+                                    {{ $rm->id }}</option>
                             @elseif($rm->status == 'free')
                                 <option value={{ $rm->id }}>
-                                    {{ $rm->roomnumber }}</option>
+                                    {{ $rm->id }}</option>
                             @endif
                         @endforeach
                     </select>
@@ -565,7 +565,11 @@ remove client
     function removePatient(id) {
         if (confirm("Ben je zeker om de patient permanent te verwijderen"))
             fetch("/api/administrator/delete_patient/" + id).then(m => {
-                showMess(m);
+                showMess(m,function(){
+                    $("#"+id).hide("slow","linear",function(){
+                        $("#"+id).empty();
+                    })
+                });
             });
     }
 

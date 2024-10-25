@@ -17,7 +17,7 @@ class financcontroller extends Controller
         $req->validate(
             [
                 "patient" => "required|integer",
-                "caretaking" => "required|numeric|min:0.00|max:9999999999.99"
+                "caretaking" => "required|numeric|min:0.00|max:99999999.99"
 
             ],
             [
@@ -26,11 +26,11 @@ class financcontroller extends Controller
                 "caretaking.required"=>"De ziektekosten zijn verplict",
                 "caretaking.numeric" => "Het bedrag moet een nummer zijn",
                 "caretaking.min" => "De zorgkosten moet minimaal 0,01 zijn",
-                "caretaking.max" => "De zorgkosten mag maximaal 9999999999,99"
+                "caretaking.max" => "De zorgkosten mag maximaal 99999999,99"
             ]
         );
         $pt = patient::findOrFail($req->patient);
-        if ($pt->assigned_room_id != -1)
+        if ($pt->assigned_room_id != -1 && $pt->assigned_room_id!=null)
             $hire = roommodel::findOrfail($pt->assigned_room_id)->price;
         else
             $hire = 0;
