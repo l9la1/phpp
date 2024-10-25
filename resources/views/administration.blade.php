@@ -168,7 +168,7 @@ addapt them
 <div id="messages" class="container mt-3 alert alert-success"
     style="display:none; border-radius: 8px; font-weight: bold;"></div>
 <div class="input-group mb-3">
-    <input type="text" placeholder="Zoek mensen op de wachtlijst" class="form-control" id="search"
+    <input type="text" placeholder="Zoek mensen in de agenda" class="form-control" id="search"
         style="border-radius: 5px; box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);" oninput="search($(this).val())" />
 </div>
 <table class="table table-hover table-striped text-center align-middle"
@@ -287,7 +287,7 @@ remove client
 -->
 <div id="messages" class="container mt-3 alert" style="display:none; border-radius: 8px; font-weight: bold;"></div>
 <div class="input-group mb-3">
-    <input type="text" placeholder="Zoek mensen op de wachtlijst" class="form-control" id="search"
+    <input type="text" placeholder="Zoek patienten" class="form-control" id="search"
         style="border-radius: 5px; box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);"
         oninput="search($(this).val())" />
 </div>
@@ -697,7 +697,7 @@ create new invoices
             style="display:none; border-radius: 8px; font-weight: bold;"></div>
         <h3 class="text-center"
             style="background-color:#6c757d; color: #fff; padding: 15px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-            Bestaande Facaturen
+            Bestaande Kamers
         </h3>
         <table class="table table-bordered table-hover table-striped text-center align-middle" id="pTable">
             <thead class="thead-dark">
@@ -718,9 +718,9 @@ create new invoices
                             <td></td>
                         @else
                             <td>{{ $rm->id }}</td>
-                            <td><input type="number" value="{{ $rm->bed_amount }}" id="b{{ $rm->id }}"
+                            <td><input type="number" class="form-control" value="{{ $rm->bed_amount }}" id="b{{ $rm->id }}"
                                     max="2" min="1" /></td>
-                            <td>€<input type="number" step="0.01" min="0.01" value="{{ $rm->price }}"
+                            <td>€<input type="number" step="0.01" class="form-control" style="width:19rem;display:inline;"min="0.01" value="{{ $rm->price }}"
                                     id="p{{ $rm->id }}" /></td>
                             <td>
                                 <ul class="action-list">
