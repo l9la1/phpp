@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('status');
             $table->integer('bed_amount');
-            $table->decimal("price",8,2);
+            $table->decimal("price",10,2);
         });
     }
 
