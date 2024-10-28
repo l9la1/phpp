@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\patient;
 use Illuminate\Http\Request;
 use App\Http\Controllers\patients;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix("doctor")->group(function(){
 Route::post("/addApointment",[appointments::class,"addApointment"]);
 Route::get("/deleteApp/{id}",[appointments::class,"deleteAppointment"]);
+});
+
+Route::prefix("patient")->group(function(){
+Route::get("/setPayed/{id}",[patient::class,"setPayed"]);
 });
 
 Route::prefix("administrator")->group(function(){
