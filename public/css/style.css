@@ -1,0 +1,23 @@
+body {
+    background-color: #e9ecef; /* Slightly darker background */
+    color: #343a40; /* Darker text color */
+    scroll-behavior: smooth;
+}
+
+
+.action-list{
+    padding:0;
+    margin:0;
+    list-style:none;
+}
+
+.action-list li {display:inline-block;}
+.action-list li button
+{
+    height:28px;
+    width:33px;
+    padding:0;
+    border-radius:0;
+    transition: all 0.3s ease 0s;
+}
+.action-list li a:hover{ box-shadow: 0 0 5px #ddd; }
