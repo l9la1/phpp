@@ -63,8 +63,6 @@
                 oninput="search($(this).val())" />
         </div>
 
-        <div
-            style="height:400px;overflow-y:scroll; background-color: #f7f9fc; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); border-radius: 10px; padding: 1rem;">
             <table class="table table-hover table-striped text-center align-middle" id="que"
                 style="background-color: #fff;">
                 <thead style="background-color: #20c997; color: white;">
@@ -95,7 +93,6 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
@@ -300,6 +297,7 @@ remove client
             <th>geboortedatum</th>
             <th>kamer nummer</th>
             <th>familie</th>
+            <th>medisch dosier</th>
             <th></th>
         </tr>
     <tbody>
@@ -478,6 +476,9 @@ remove client
                                 </div>
                             @endif
                         </div>
+                </td>
+                <td>
+                    <a href="/showMedical/{{$pt->id}}" class="btn btn-primary">medisch dosier</a>
                 </td>
                 <td>
                     <ul class="action-list">
