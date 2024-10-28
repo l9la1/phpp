@@ -478,7 +478,7 @@ remove client
                         </div>
                 </td>
                 <td>
-                    <a href="/showMedical/{{$pt->id}}" class="btn btn-primary">medisch dosier</a>
+                    <a href="/medical/{{$pt->id}}" class="btn btn-primary btn-sm" target="_blank" rel="noopener noreferrer">medisch dosier</a>
                 </td>
                 <td>
                     <ul class="action-list">
