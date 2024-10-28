@@ -54,4 +54,9 @@ class patient extends Model
     {
         return $this->hasOne(Queue::class);
     }
+
+    public function history()
+    {
+        return $this->hasMany(medicalmodel::class,"id","patient_id");
+    }
 }
