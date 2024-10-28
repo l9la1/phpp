@@ -19,7 +19,7 @@ class queuecontroler extends Controller
         if ($what)
             return view("administration", [
                 "queue" => quemodel::orderBy("priority", "desc")->orderBy("id")->get(),
-                "pat" => patient::where("approval_state", "0")->get(),
+                "pat" => patient::where("approval_state", "1")->get(),
                 "rooms" => roommodel::get(),
                 "app" => appointment::where("appointment_date", ">=", Carbon::now()->setTimezone('Europe/Amsterdam'))->orderby("appointment_date")->get(),
                 "doctor" => doctor::get(),

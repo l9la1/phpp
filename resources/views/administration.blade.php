@@ -51,7 +51,7 @@
             <select class="form-control" id="rNumber" style="margin-bottom: 1rem;">
                 <option value="-1">Extern</option>
                 @foreach ($rooms as $room)
-                    <option value="{{ $room->roomnumber }}">{{ $room->roomnumber }}</option>
+                    <option value="{{ $room->id }}">{{ $room->id }}</option>
                 @endforeach
             </select>
             <button class="btn btn-success" style="width: 100%;" onclick="$('#roomnumber').hide()">Verplaats</button>
@@ -63,8 +63,6 @@
                 oninput="search($(this).val())" />
         </div>
 
-        <div
-            style="height:400px;overflow-y:scroll; background-color: #f7f9fc; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); border-radius: 10px; padding: 1rem;">
             <table class="table table-hover table-striped text-center align-middle" id="que"
                 style="background-color: #fff;">
                 <thead style="background-color: #20c997; color: white;">
@@ -95,7 +93,6 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
@@ -168,7 +165,7 @@ addapt them
 <div id="messages" class="container mt-3 alert alert-success"
     style="display:none; border-radius: 8px; font-weight: bold;"></div>
 <div class="input-group mb-3">
-    <input type="text" placeholder="Zoek mensen op de wachtlijst" class="form-control" id="search"
+    <input type="text" placeholder="Zoek mensen in de agenda" class="form-control" id="search"
         style="border-radius: 5px; box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);" oninput="search($(this).val())" />
 </div>
 <table class="table table-hover table-striped text-center align-middle"
@@ -287,7 +284,7 @@ remove client
 -->
 <div id="messages" class="container mt-3 alert" style="display:none; border-radius: 8px; font-weight: bold;"></div>
 <div class="input-group mb-3">
-    <input type="text" placeholder="Zoek mensen op de wachtlijst" class="form-control" id="search"
+    <input type="text" placeholder="Zoek patienten" class="form-control" id="search"
         style="border-radius: 5px; box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);"
         oninput="search($(this).val())" />
 </div>
@@ -300,6 +297,7 @@ remove client
             <th>geboortedatum</th>
             <th>kamer nummer</th>
             <th>familie</th>
+            <th>medisch dosier</th>
             <th></th>
         </tr>
     <tbody>
@@ -318,10 +316,10 @@ remove client
                         @foreach ($rooms as $rm)
                             @if ($rm->id == $pt->assigned_room_id)
                                 <option value={{ $rm->id }} selected>
-                                    {{ $rm->roomnumber }}</option>
+                                    {{ $rm->id }}</option>
                             @elseif($rm->status == 'free')
                                 <option value={{ $rm->id }}>
-                                    {{ $rm->roomnumber }}</option>
+                                    {{ $rm->id }}</option>
                             @endif
                         @endforeach
                     </select>
@@ -480,6 +478,9 @@ remove client
                         </div>
                 </td>
                 <td>
+                    <a href="/showMedical/{{$pt->id}}" class="btn btn-primary">medisch dosier</a>
+                </td>
+                <td>
                     <ul class="action-list">
                         <li><button class="btn btn-primary" onclick="addaptPatient({{ $pt->id }})"><i
                                     class="bi bi-pencil"></i></button></li>
@@ -565,7 +566,11 @@ remove client
     function removePatient(id) {
         if (confirm("Ben je zeker om de patient permanent te verwijderen"))
             fetch("/api/administrator/delete_patient/" + id).then(m => {
-                showMess(m);
+                showMess(m,function(){
+                    $("#"+id).hide("slow","linear",function(){
+                        $("#"+id).empty();
+                    })
+                });
             });
     }
 
@@ -693,7 +698,7 @@ create new invoices
             style="display:none; border-radius: 8px; font-weight: bold;"></div>
         <h3 class="text-center"
             style="background-color:#6c757d; color: #fff; padding: 15px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-            Bestaande Facaturen
+            Bestaande Kamers
         </h3>
         <table class="table table-bordered table-hover table-striped text-center align-middle" id="pTable">
             <thead class="thead-dark">
@@ -714,9 +719,9 @@ create new invoices
                             <td></td>
                         @else
                             <td>{{ $rm->id }}</td>
-                            <td><input type="number" value="{{ $rm->bed_amount }}" id="b{{ $rm->id }}"
+                            <td><input type="number" class="form-control" value="{{ $rm->bed_amount }}" id="b{{ $rm->id }}"
                                     max="2" min="1" /></td>
-                            <td>€<input type="number" step="0.01" value="{{ $rm->price }}"
+                            <td>€<input type="number" step="0.01" class="form-control" style="width:19rem;display:inline;"min="0.01" value="{{ $rm->price }}"
                                     id="p{{ $rm->id }}" /></td>
                             <td>
                                 <ul class="action-list">
