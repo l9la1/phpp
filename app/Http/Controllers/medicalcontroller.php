@@ -9,9 +9,12 @@ use Illuminate\Http\Request;
 
 class medicalcontroller extends Controller
 {
-    public function index($id)
+    public function index($id=null)
     {
+        if($id!=null)
         return view("medicalhistory",["patient"=>patient::findOrFail($id),"medicalhistory"=>medicalmodel::where("patient_id",$id)->orderBy("date","desc")->get()]);
+    else
+        return view("medicalhistory",["patients"=>patient::get()]);
     }
 
     public function addInformation(Request $req)

@@ -12,6 +12,14 @@
 </head>
 
 <body onload="setTime()">
+    <nav class="nav justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link" href="/doctor">Afspraken</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/medical">Medische dosier</a>
+        </li>
+    </nav>
     <div id="messages" class="container mt-3"></div>
 
     <div class="container">

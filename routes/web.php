@@ -32,7 +32,7 @@ Route::post("/addInvoice",[financcontroller::class,"addInvoices"]);
 Route::post("/addRoom",[roomcontroller::class,"addRoom"]);
 });
 Route::prefix("medical")->group(function(){
-    Route::get("/{id}",[medicalcontroller::class,"index"]);
+    Route::get("/{id?}",[medicalcontroller::class,"index"]);
     Route::post("/addInformation",[medicalcontroller::class,"addInformation"]);
 });
 Route::prefix("patient")->group(function(){
