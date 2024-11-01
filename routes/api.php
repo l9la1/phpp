@@ -46,4 +46,5 @@ Route::get("/delete_fam/{id}",[familycontroller::class,"deleteFam"]);
 Route::post("/addFamily",[familycontroller::class,"addMember"]);
 Route::post("/update_room",[roomcontroller::class,"addaptRoom"]);
 Route::get("/remove_room/{id}",[roomcontroller::class,"removeRoom"]);
+Route::get("/killPatient/{id}",[patients::class,"kill"]);
 });

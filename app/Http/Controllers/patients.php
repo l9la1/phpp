@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Queue;
+use App\Models\patient;
 use App\Models\roommodel;
+
 use App\Models\financials;
 use App\Models\appointment;
 use Illuminate\Http\Request;
-
-use App\Models\Queue;
-use App\Models\patient;
+use App\Models\diedpatientmodel;
 use Illuminate\Validation\ValidationException;
 
 class patients extends Controller
@@ -124,5 +126,19 @@ class patients extends Controller
     public function thankyou()
     {
         return view('patientregister');
+    }
+
+    public function kill($id)
+    {
+        $per=patient::findOrFail($id);
+        $per->dead=1;
+        $per->save();
+
+        $dp=new diedpatientmodel;
+        $dp->patient_id=$id;
+        $dp->date=Carbon::now()->toDateString();
+        $dp->save();
+
+        return response()->json(["suc"=>"De patient is nu officieel dood"]);
     }
 }

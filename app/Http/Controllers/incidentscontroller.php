@@ -39,7 +39,7 @@ class incidentscontroller extends Controller
         return view("incidents", [
             "incidents" => $incident,
             "doctors" => doctor::get(),
-            "patients" => patient::get()
+            "patients" => patient::where("dead",0)->get()
         ]);
     }
 

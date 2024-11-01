@@ -20,6 +20,7 @@ return new class extends Migration
             $table->boolean('approval_state')->default(false);
             $table->integer('assigned_room_id')->nullable();
             $table->date('registration_date')->useCurrent();
+            $table->boolean("dead")->default(0);
             $table->timestamps();
         });
     }

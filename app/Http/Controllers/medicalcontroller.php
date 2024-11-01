@@ -14,7 +14,7 @@ class medicalcontroller extends Controller
         if($id!=null)
         return view("medicalhistory",["patient"=>patient::findOrFail($id),"medicalhistory"=>medicalmodel::where("patient_id",$id)->orderBy("date","desc")->get()]);
     else
-        return view("medicalhistory",["patients"=>patient::get()]);
+        return view("medicalhistory",["patients"=>patient::where("dead",0)->get()]);
     }
 
     public function addInformation(Request $req)
