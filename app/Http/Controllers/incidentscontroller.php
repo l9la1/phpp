@@ -10,10 +10,13 @@ use Illuminate\Validation\ValidationException;
 
 class incidentscontroller extends Controller
 {
+    // This is to go to the view with the appropative data
     public function index()
     {
+        // Get all the incidents
         $incident=incidentsmodel::get();
 
+        // Turn all the given patient ids en involved persons to there beloning name
         foreach($incident as $ic)
         {
             $personsInvoldeName=[];
@@ -32,6 +35,7 @@ class incidentscontroller extends Controller
             $ic->patient_id=$patientInvoldeName;
         }
 
+        // Goto view with the edited data
         return view("incidents", [
             "incidents" => $incident,
             "doctors" => doctor::get(),
@@ -39,6 +43,7 @@ class incidentscontroller extends Controller
         ]);
     }
 
+    // This is to add a new incident in the database
     public function addIncident(Request $req)
     {
         try {
