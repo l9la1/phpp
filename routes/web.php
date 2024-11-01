@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\familycontroller;
 use App\Http\Controllers\financcontroller;
 use App\Http\Controllers\medicalcontroller;
+use App\Http\Controllers\incidentscontroller;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,9 @@ Route::post("/addRoom",[roomcontroller::class,"addRoom"]);
 Route::prefix("medical")->group(function(){
     Route::get("/{id?}",[medicalcontroller::class,"index"]);
     Route::post("/addInformation",[medicalcontroller::class,"addInformation"]);
+});
+Route::prefix("incidents")->group(function(){
+    Route::get("/",[incidentscontroller::class,"index"]);
 });
 Route::prefix("patient")->group(function(){
     Route::get("/",[patients::class,"index"]);

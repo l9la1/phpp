@@ -7,6 +7,7 @@ use App\Http\Controllers\appointments;
 use App\Http\Controllers\queuecontroler;
 use App\Http\Controllers\roomcontroller;
 use App\Http\Controllers\familycontroller;
+use App\Http\Controllers\incidentscontroller;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix("doctor")->group(function(){
 Route::post("/addApointment",[appointments::class,"addApointment"]);
 Route::get("/deleteApp/{id}",[appointments::class,"deleteAppointment"]);
+});
+
+Route::prefix("/incident")->group(function(){
+    Route::post("/addIncident",[incidentscontroller::class,"addIncident"]);
 });
 
 Route::prefix("administrator")->group(function(){
