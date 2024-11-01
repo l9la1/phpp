@@ -26,11 +26,11 @@
                     @foreach ($incidents as $ic)
                         <tr>
                             <td>
-                                {{implode(', ',$ic->invovled_persons)}}
+                                {{ implode(', ', $ic->invovled_persons) }}
                             </td>
-                            <td>{{implode(', ',$ic->patient_id)}}</td>`
-                            <td>{{$ic->date}}</td>
-                            <td>{{$ic->taken_actions}}</td>
+                            <td>{{ implode(', ', $ic->patient_id) }}</td>`
+                            <td>{{ $ic->date }}</td>
+                            <td>{{ $ic->taken_actions }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -40,10 +40,14 @@
             <div id="messages" class="container mt-3 alert"
                 style="display:none; border-radius: 8px; font-weight: bold;"></div>
             <div class="card">
-                <div class="card-header">Voeg incident toe</div>
+                <div class="card-header">
+                    <h3 class="text-center text-capitalize">Voeg incident toe</h3>
+                </div>
                 <div class="card-body">
                     <div class="mb-3"><label class="form-label">Patienten die betrokken
                             zijn</label>
+                        <input type="text" class="form-control" oninput="searchPatient($(this).val(),'pTable')"
+                            placeholder="Zoek patienten">
                         <table class="table table-bordered table-hover table-striped text-center align-middle"
                             id="pTable">
                             <thead class="thead-dark">
@@ -64,6 +68,8 @@
                     </div>
                     <div class="mb-3"><label class="form-label">Betrokken hulp verlende
                             personen</label>
+                        <input type="text" class="form-control" oninput="searchPatient($(this).val(),'eTable')"
+                            placeholder="Zoek personen">
                         <table class="table table-bordered table-hover table-striped text-center align-middle"
                             id="eTable">
                             <thead class="thead-dark">
@@ -103,7 +109,9 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{{ asset('js/apiResponse.js') }}"></script>
     <script>
+        // Make api call to url and add a new incident in de db 
         function addIncident() {
+            // Check wich patients are checked
             var pt = $("#pTable");
             var pdt = pt.find("tr>td");
             var pd = [];
@@ -113,6 +121,7 @@
                         pd.push($(pdt[i]).children().val());
             }
 
+            // Check wich doctors are checked
             var dt = $("#eTable");
             var ddt = dt.find("tr>td");
             var dd = [];
@@ -122,6 +131,8 @@
                         dd.push("d" + $(ddt[i]).children().val());
                     }
             }
+            
+            // Make api call
             fetch("/api/incident/addIncident", {
                 method: "POST",
                 body: JSON.stringify({
@@ -135,6 +146,23 @@
                     'Accept': 'application/json'
                 }
             }).then(er => showMess(er));
+        }
+
+        // This is to search for persons in the given id off a table
+        function searchPatient(val, id) {
+            var tb = $("#" + id);
+            var tr = tb.find("tr");
+
+            for (var i = 0; i < tr.length; i++) {
+                var td = $(tr[i]).find("td");
+                for (var j = 0; j < td.length; j++) {
+                    if ($(td[j]).text().includes(val)) {
+                        $(tr[i]).show();
+                        break;
+                    } else
+                        $(tr[i]).hide();
+                }
+            }
         }
     </script>
 </body>
