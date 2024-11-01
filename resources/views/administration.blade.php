@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>administratie</title>
+    <title>Administratie</title>
 </head>
 
 <body>
@@ -786,6 +786,7 @@ create new invoices
 <script src="{{ asset('js/apiResponse.js') }}"></script>
 
 <script>
+    // This is when there is data sended and there is a message hide it after a specified time
     document.addEventListener("DOMContentLoaded", function() {
         var mes = $("#mes");
         if (mes)
@@ -794,6 +795,7 @@ create new invoices
             }, 2000);
     });
 
+    // This is to addapt a room
     function addaptRoom(id) {
         fetch("/api/administrator/update_room", {
             method: "POST",
@@ -811,6 +813,7 @@ create new invoices
         })
     }
 
+    // This is to remove a room
     function removeRoom(id) {
         if (confirm('Ben je zeker om de kamer te verwijderen'))
             fetch("/api/administrator/remove_room/" + id).then(res => {

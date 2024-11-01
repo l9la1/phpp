@@ -53,7 +53,7 @@ class appointments extends Controller
         }
     }
 
-    // THis is to add a new appointment
+    // This is to add a new appointment
     public function addApointment(Request $req)
     {
         try {
