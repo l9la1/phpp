@@ -59,4 +59,9 @@ class patient extends Model
     {
         return $this->hasMany(medicalmodel::class,"id","patient_id");
     }
+
+    public function dead()
+    {
+        return $this->hasOne(diedpatientmodel::class,"id","patient_id");
+    }
 }

@@ -66,36 +66,36 @@
                 oninput="search($(this).val())" />
         </div>
 
-            <table class="table table-hover table-striped text-center align-middle" id="que"
-                style="background-color: #fff;">
-                <thead style="background-color: #20c997; color: white;">
-                    <tr>
-                        <th>Prioriteit</th>
-                        <th>Patient Naam</th>
-                        <th>Verplaats naar patient lijst</th>
-                        <th>Verwijder</th>
+        <table class="table table-hover table-striped text-center align-middle" id="que"
+            style="background-color: #fff;">
+            <thead style="background-color: #20c997; color: white;">
+                <tr>
+                    <th>Prioriteit</th>
+                    <th>Patient Naam</th>
+                    <th>Verplaats naar patient lijst</th>
+                    <th>Verwijder</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($queue as $que)
+                    <tr id="tr{{ $que->pat->id }}"
+                        style="background-color: #ffffff; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); margin-bottom: 10px;">
+                        <td>
+                            <input type="checkbox" id="c{{ $que->id }}"
+                                @if ($que->priority == 1) checked @endif
+                                onclick="updatePriority({{ $que->id }})" />
+                        </td>
+                        <td>{{ $que->pat->name }}</td>
+                        <td><button class="btn btn-warning btn-sm text-white"
+                                onclick="makePatient({{ $que->pat->id }})">Verplaats</button></td>
+                        <td><button class="btn btn-danger btn-sm"
+                                onclick="removeFromQueue({{ $que->id }},{{ $que->pat->id }})"><i
+                                    class="bi bi-trash"></i></button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach ($queue as $que)
-                        <tr id="tr{{ $que->pat->id }}"
-                            style="background-color: #ffffff; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); margin-bottom: 10px;">
-                            <td>
-                                <input type="checkbox" id="c{{ $que->id }}"
-                                    @if ($que->priority == 1) checked @endif
-                                    onclick="updatePriority({{ $que->id }})" />
-                            </td>
-                            <td>{{ $que->pat->name }}</td>
-                            <td><button class="btn btn-warning btn-sm text-white"
-                                    onclick="makePatient({{ $que->pat->id }})">Verplaats</button></td>
-                            <td><button class="btn btn-danger btn-sm"
-                                    onclick="removeFromQueue({{ $que->id }},{{ $que->pat->id }})"><i
-                                        class="bi bi-trash"></i></button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                @endforeach
+            </tbody>
+        </table>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
@@ -191,7 +191,7 @@ addapt them
                 <td>
                     <select id="s{{ $ap->id }}" class="form-control">
                         @foreach ($doctor as $d)
-                            <option @if ($d->id == $ap->doc->id) selected  @endif value="{{ $d->id }}">
+                            <option @if ($d->id == $ap->doc->id) selected @endif value="{{ $d->id }}">
                                 {{ $d->name }}</option>
                         @endforeach
                     </select>
@@ -481,7 +481,8 @@ remove client
                         </div>
                 </td>
                 <td>
-                    <a href="/medical/{{$pt->id}}" class="btn btn-primary btn-sm" target="_blank" rel="noopener noreferrer">medisch dosier</a>
+                    <a href="/medical/{{ $pt->id }}" class="btn btn-primary btn-sm" target="_blank"
+                        rel="noopener noreferrer">medisch dosier</a>
                 </td>
                 <td>
                     <ul class="action-list">
@@ -489,6 +490,9 @@ remove client
                                     class="bi bi-pencil"></i></button></li>
                         <li><button class="btn btn-danger" onclick="removePatient({{ $pt->id }})"><i
                                     class="bi bi-trash"></i></button></li>
+                        <li><button class="btn btn-dark border-none" onclick="killPatient({{ $pt->id }})"><img
+                                    src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.ciFUIiHSO-kAIL9ZO2-0ugHaIl%26pid%3DApi&f=1&ipt=04cec10803c662be0473655c4d571f4d39670530754687a2f3886701e76193bf&ipo=images"
+                                    style="width:inherit;height:inherit" /></button></li>
                     </ul>
                 </td>
             </tr>
@@ -569,9 +573,9 @@ remove client
     function removePatient(id) {
         if (confirm("Ben je zeker om de patient permanent te verwijderen"))
             fetch("/api/administrator/delete_patient/" + id).then(m => {
-                showMess(m,function(){
-                    $("#"+id).hide("slow","linear",function(){
-                        $("#"+id).empty();
+                showMess(m, function() {
+                    $("#" + id).hide("slow", "linear", function() {
+                        $("#" + id).empty();
                     })
                 });
             });
@@ -604,6 +608,18 @@ remove client
                     $("#fm" + id).empty();
                 });
             });
+    }
+
+    function killPatient(id) {
+        if (confirm("Ben je zeker om deze patient als dood te melden.\n Het kan niet meer ongedaan worden gedaan")) {
+            if (confirm("Ben je echt zeker om deze patient als dood te melden.\n Het kan niet meer ongedaan worden gedaan"))
+                if (confirm("Ben je echt echt zeker om deze patient als dood te melden.\n Het kan niet meer ongedaan worden gedaan"))
+                    fetch("/api/administrator/killPatient/" + id).then(er => showMess(er,function() {
+                        $("#"+id).hide("slow","linear",function(){
+                            $("#"+id).empty();
+                        })
+                    }));
+        }
     }
 </script>
 </body>
@@ -722,9 +738,10 @@ create new invoices
                             <td></td>
                         @else
                             <td>{{ $rm->id }}</td>
-                            <td><input type="number" class="form-control" value="{{ $rm->bed_amount }}" id="b{{ $rm->id }}"
-                                    max="2" min="1" /></td>
-                            <td>€<input type="number" step="0.01" class="form-control" style="width:19rem;display:inline;"min="0.01" value="{{ $rm->price }}"
+                            <td><input type="number" class="form-control" value="{{ $rm->bed_amount }}"
+                                    id="b{{ $rm->id }}" max="2" min="1" /></td>
+                            <td>€<input type="number" step="0.01" class="form-control"
+                                    style="width:19rem;display:inline;"min="0.01" value="{{ $rm->price }}"
                                     id="p{{ $rm->id }}" /></td>
                             <td>
                                 <ul class="action-list">
