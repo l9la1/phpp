@@ -55,9 +55,13 @@ class patient extends Model
         return $this->hasOne(Queue::class);
     }
 
-    public function user()
-{
-    return $this->belongsTo(User::class);
-}
+    public function history()
+    {
+        return $this->hasMany(medicalmodel::class,"id","patient_id");
+    }
 
+    public function dead()
+    {
+        return $this->hasOne(diedpatientmodel::class,"id","patient_id");
+    }
 }

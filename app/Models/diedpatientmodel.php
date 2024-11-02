@@ -5,21 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class roommodel extends Model
+class diedpatientmodel extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'status',
-        'bed_amount',
-        'price'
+        'id',
+        'patient_id',
+        'date',
     ];
-    protected $table = 'rooms';
+    protected $table = 'diedpatients';
     public $timestamps = false;
-    
 
-    public function pat()
+
+    public function patient()
     {
-        return $this->hasOne(patient::class,"assigned_room_id","roomnumber");
+        return $this->belongsTo(patient::class,"patient_id","id");
     }
+
 }

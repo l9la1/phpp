@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('diedpatients', function (Blueprint $table) {
             $table->id();
             $table->integer('patient_id');
-            $table->date('decolumn: ad_date');
+            $table->date('ad_date');
         });
     }
 

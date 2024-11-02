@@ -12,6 +12,17 @@
 </head>
 
 <body onload="setTime()">
+    <nav class="nav justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link" href="/doctor">Afspraken</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/medical">Medische dosier</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/incidents" target="_blank">incidenten</a>
+        </li>
+    </nav>
     <div id="messages" class="container mt-3"></div>
 
     <div class="container">
@@ -72,6 +83,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($app as $ap)
+                                    @if($ap->pat->approval_state==1)
                                         <tr id="{{ $ap->id }}">
                                             <td>
                                                 <select id="s{{ $ap->id }}" class="form-select">
@@ -91,13 +103,14 @@
                                                     class="form-control">{{ $ap->reason }}</textarea>
                                             </td>
                                             <td>
-                                                <input type="button" value="Adapt" class="btn btn-warning"
+                                                <input type="button" value="Pas aan" class="btn btn-warning"
                                                     onclick="updateData({{ $ap->id }})" />
                                             </td>
                                             <td>
                                                 <button class="btn btn-danger" onclick="deleteAppointment({{ $ap->id }})">Delete</button>
                                             </td>
                                         </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
