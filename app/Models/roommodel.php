@@ -5,21 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class financials extends Model
+class roommodel extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'patient_id',
-        'hire_cost',
-        'caretaking_costs',
-        'payed'
-    ];
-    public $timestamps = false;
 
-    protected $table = 'financial';
+    protected $fillable = [
+        'status',
+        'bed_amount',
+        'price'
+    ];
+    protected $table = 'rooms';
+    public $timestamps = false;
+    
 
     public function pat()
     {
-        return $this->belongsTo(patient::class,"patient_id","id");
+        return $this->hasOne(patient::class,"assigned_room_id","roomnumber");
     }
 }

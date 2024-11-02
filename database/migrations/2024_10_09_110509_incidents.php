@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('incidents', function (Blueprint $table) {
             $table->id();
-            $table->integer('patient_id');
+            $table->text('patient_id');
             $table->date('date');
             $table->text('invovled_persons');
             $table->text('taken_actions');
-            $table->text('classification');
         });
     }
 

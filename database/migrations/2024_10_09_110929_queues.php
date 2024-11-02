@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('priority');
             $table->integer('status');
-            $table->integer('patient_id');
+            $table->foreignId('patient_id')->constrained()->onDelete('cascade');
+            $table->timestamps(); // This adds created_at and updated_at columns
         });
     }
 
