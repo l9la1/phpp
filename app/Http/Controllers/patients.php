@@ -141,4 +141,15 @@ class patients extends Controller
 
         return response()->json(["suc"=>"De patient is nu officieel dood"]);
     }
+
+    // Show login form
+    public function showLoginForm() {
+        return view('login'); // Assuming 'login.blade.php' is the view name
+    }
+
+    // Process login submission
+    public function login(Request $request) {
+        // Validate and authenticate the user here
+    }
+
 }

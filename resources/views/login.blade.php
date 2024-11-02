@@ -15,7 +15,8 @@
     <div class="container">
         <h2 class="text-center mt-4">Log hier in uw account</h2> <!-- Label above the form -->
 
-        <form action="{{ route('patients.create') }}" method="POST">
+        <form action="{{ route('login.store') }}" method="POST">
+
             @csrf
             <label for="name">Name:</label>
             <input type="text" name="name" required>

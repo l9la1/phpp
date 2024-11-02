@@ -52,5 +52,5 @@ Route::post('/patientregister', [patients::class, 'store'])->name('patients.stor
 
 // Route::get('/thankyou', action: [patients::class, 'thankyou'])->name('patients.thankyou');
 
-Route::get('/login', [patients::class, 'login'])->name('login');
-Route::post('/login', [patients::class, 'login'])->name('login');
+Route::get('/login', [patients::class, 'showLoginForm'])->name('login.create');
+Route::post('/login', [patients::class, 'login'])->name('login.store');

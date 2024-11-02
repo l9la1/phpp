@@ -12,14 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('doctors', function (Blueprint $table) {
-            $table->id();
-            $table->foreign('login_id')->references('login_id')->on('users')->onDelete('cascade');
-            $table->text('name');
+            $table->id();  // Primary key
+            $table->unsignedBigInteger('login_id'); 
+            $table->string('name');
             $table->date('date_of_birth');
-            $table->text('contact_email');
-            $table->text('contact_phone');
-            $table->text('specialty');
+            $table->string('contact_email');  
+            $table->string('contact_phone');  
+            $table->string('specialty'); 
+            $table->timestamps();
+        
+            // Set up foreign key constraint to the users table
+            $table->foreign('login_id')->references('id')->on('users')->onDelete('cascade');
         });
+        
     }
 
     /**

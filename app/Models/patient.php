@@ -64,4 +64,10 @@ class patient extends Model
     {
         return $this->hasOne(diedpatientmodel::class,"id","patient_id");
     }
+
+    
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }
