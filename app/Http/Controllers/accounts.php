@@ -35,8 +35,9 @@ class accounts extends Controller{
         // Weet niet hoe ik het moet doen met perms en tokens
         $admin=new User;
         $admin->name=$req->name;
-        $admin->admin_mail=$req->email;
+        $admin->email=$req->admin_mail;
         $admin->password=$req->password;
+        $admin->perms=0;
         $admin->save();
         return redirect()->back()->with("Succes","het is gelukt");
     }

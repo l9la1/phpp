@@ -600,7 +600,7 @@ create new invoices
             <h1 class="fw-bold mb-0 fs-2">Toevoegen administratie</h1>
         </div>
         <div class="modal-body p-5 pt-0">
-            <form action="add_doc" method="post">
+            <form action="add_admin" method="post">
             @csrf
             <div class="form-floating mb-3">
                 <input type="text" class="form-control rounded-3" name="name" placeholder="Magere Hein" required>
