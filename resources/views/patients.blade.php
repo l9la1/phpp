@@ -43,7 +43,7 @@
                                         <td>
                                             @if ($fin->payed == 0)
                                                 <button onclick="payed({{ $fin->id }})"
-                                                    class="btn btn-light">Betaal</button>
+                                                    class="btn btn-success">Betaal</button>
                                             @else
                                                 Ja
                                             @endif
@@ -95,7 +95,6 @@
     <script>
         function payed(id) {
             fetch("/api/patient/setPayed/" + id).then(() => {
-                window.open("https://www.youtube.com/watch?v=p7YXXieghto", "_blank").focus();
                 location.reload();
             });
         }
