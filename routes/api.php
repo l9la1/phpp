@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\patient;
 use Illuminate\Http\Request;
 use App\Http\Controllers\patients;
 use Illuminate\Support\Facades\Route;

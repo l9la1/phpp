@@ -18,9 +18,21 @@ class patients extends Controller
     public function index()
     {
         return view("patients", [
-            'financial' => financials::where("patient_id", 2)->orderBy("id", "desc")->limit(5)->get(),
+            'financial' => financials::where("patient_id", 1)->orderBy("id", "desc")->limit(5)->get(),
             'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get()
         ]);
+    }
+
+    public function setPayed($id)
+    {
+        if(is_int((int)$id))
+        {
+            $fin=financials::find($id);
+            $fin->payed=1;
+            $fin->save();
+            return response()->json(['suc'=>""]);
+        }
+
     }
 
     // To store the addapted data in the db

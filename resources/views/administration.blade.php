@@ -68,36 +68,38 @@
                 oninput="search($(this).val())" />
         </div>
 
-        <table class="table table-hover table-striped text-center align-middle" id="que"
-            style="background-color: #fff;">
-            <thead style="background-color: #20c997; color: white;">
-                <tr>
-                    <th>Prioriteit</th>
-                    <th>Patient Naam</th>
-                    <th>Verplaats naar patient lijst</th>
-                    <th>Verwijder</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($queue as $que)
-                    <tr id="tr{{ $que->pat->id }}"
-                        style="background-color: #ffffff; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); margin-bottom: 10px;">
-                        <td>
-                            <input type="checkbox" id="c{{ $que->id }}"
-                                @if ($que->priority == 1) checked @endif
-                                onclick="updatePriority({{ $que->id }})" />
-                        </td>
-                        <td>{{ $que->pat->name }}</td>
-                        <td><button class="btn btn-warning btn-sm text-white"
-                                onclick="makePatient({{ $que->pat->id }})">Verplaats</button></td>
-                        <td><button class="btn btn-danger btn-sm"
-                                onclick="removeFromQueue({{ $que->id }},{{ $que->pat->id }})"><i
-                                    class="bi bi-trash"></i></button>
-                        </td>
+        
+            <table class="table table-hover table-striped text-center align-middle" id="que"
+                style="background-color: #fff;">
+                <thead style="background-color: #20c997; color: white;">
+                    <tr>
+                        <th>Prioriteit</th>
+                        <th>Patient Naam</th>
+                        <th>Verplaats naar patient lijst</th>
+                        <th>Verwijder</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($queue as $que)
+                        <tr id="tr{{ $que->pat->id }}"
+                            style="background-color: #ffffff; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); margin-bottom: 10px;">
+                            <td>
+                                <input type="checkbox" id="c{{ $que->id }}"
+                                    @if ($que->priority == 1) checked @endif
+                                    onclick="updatePriority({{ $que->id }})" />
+                            </td>
+                            <td>{{ $que->pat->name }}</td>
+                            <td><button class="btn btn-warning btn-sm text-white"
+                                    onclick="makePatient({{ $que->pat->id }})">Verplaats</button></td>
+                            <td><button class="btn btn-danger btn-sm"
+                                    onclick="removeFromQueue({{ $que->id }},{{ $que->pat->id }})"><i
+                                        class="bi bi-trash"></i></button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
