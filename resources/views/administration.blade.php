@@ -54,7 +54,9 @@
             <select class="form-control" id="rNumber" style="margin-bottom: 1rem;">
                 <option value="-1">Extern</option>
                 @foreach ($rooms as $room)
+                @if($room->status=="free")
                     <option value="{{ $room->id }}">{{ $room->id }}</option>
+                    @endif
                 @endforeach
             </select>
             <button class="btn btn-success" style="width: 100%;" onclick="$('#roomnumber').hide()">Verplaats</button>
@@ -508,7 +510,6 @@ remove client
     function makeApiCall(e, id) {
         e.preventDefault();
         const data = new FormData(document.getElementById(id));
-        console.log(data);
 
         fetch("/api/administrator/addFamily", {
             method: "POST",
@@ -517,7 +518,7 @@ remove client
                 'Accept': 'application/json'
             }
         }, ).then(err => showMess(err, function() {
-            location.reload();
+                location.reload();
         }));
     }
 
@@ -603,6 +604,7 @@ remove client
                 showMess(er, function() {
                     $("#fm" + id).hide("slow", "linear");
                     $("#fm" + id).empty();
+                    location.reload();
                 });
             });
     }
