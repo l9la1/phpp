@@ -48,25 +48,28 @@ class patients extends Controller
                 ]
             );
             $pat = patient::findOrFail($req->id);
-            $rm = roommodel::find($req->roomNm);
-            if ($pat->assigned_room_id != $req->roomNm && $rm != null &&  $rm->status == "bezet")
-                return response()->json(["err" => "de kamer is al bezet"]);
-            $room = roommodel::find($pat->assigned_room_id);
-            if ($room != null) {
-                $room->status = "free";
-                $room->save();
-            }
-            $pat->address = $req->address;
-            $pat->phonenumber = $req->phone;
-            $pat->assigned_room_id = $req->roomNm;
-            $pat->save();
-            // Check if not extern
-            if ($req->roomNm != -1) {
-                $rooms = roommodel::find($req->roomNm);
-                $rooms->status = "bezet";
-                $rooms->save();
-            }
-            return response()->json(["suc" => "successvol aangepast"]);
+            if ($pat->dead == 0) {
+                $rm = roommodel::find($req->roomNm);
+                if ($pat->assigned_room_id != $req->roomNm && $rm != null &&  $rm->status == "bezet")
+                    return response()->json(["err" => "de kamer is al bezet"]);
+                $room = roommodel::find($pat->assigned_room_id);
+                if ($room != null) {
+                    $room->status = "free";
+                    $room->save();
+                }
+                $pat->address = $req->address;
+                $pat->phonenumber = $req->phone;
+                $pat->assigned_room_id = $req->roomNm;
+                $pat->save();
+                // Check if not extern
+                if ($req->roomNm != -1) {
+                    $rooms = roommodel::find($req->roomNm);
+                    $rooms->status = "bezet";
+                    $rooms->save();
+                }
+                return response()->json(["suc" => "successvol aangepast"]);
+            } else
+                return response()->json(["err" => "Je kunt de doden niet aanpassen"]);
         } catch (ValidationException $er) {
             return response()->json(["err" => $er->errors()]);
         }
@@ -75,8 +78,13 @@ class patients extends Controller
     // Delete a patient
     public function deletePatient($id)
     {
-        patient::findOrFail($id)->delete();
-        return response()->json(["suc" => "patient is permanent verwijderd"]);
+        $pt = patient::findOrFail($id);
+        if ($pt->dead == 0) {
+            $pt->delete();
+            return response()->json(["suc" => "patient is permanent verwijderd"]);
+        } else {
+            return response()->json(["err" => "Je kunt de doden niet verwijderen"]);
+        }
     }
 
     public function create()
@@ -100,10 +108,10 @@ class patients extends Controller
                 "name.max" => "De naam mag maximaal 255 zijn",
                 "address.required" => "De adres is een verplicht veld",
                 "address.max" => "De adres mag maar maximaal 20 characters lang zijn",
-                "phonenumber.required"=>"De telefoonnummer is verplicht",
-                "phonenumber.string"=>"De telefoonnummer moet een string zijn",
-                "date_of_birth.required"=>"De geboortedatum is een verplicht veld",
-                "date_of_birth.date"=>"De geboortedatum moet een datum zijn"
+                "phonenumber.required" => "De telefoonnummer is verplicht",
+                "phonenumber.string" => "De telefoonnummer moet een string zijn",
+                "date_of_birth.required" => "De geboortedatum is een verplicht veld",
+                "date_of_birth.date" => "De geboortedatum moet een datum zijn"
             ]
         );
 
@@ -130,15 +138,27 @@ class patients extends Controller
 
     public function kill($id)
     {
-        $per=patient::findOrFail($id);
-        $per->dead=1;
-        $per->save();
+        $per = patient::findOrFail($id);
+        if ($per->dead == 0) {
+            $rmNum = $per->assigned_room_id;
 
-        $dp=new diedpatientmodel;
-        $dp->patient_id=$id;
-        $dp->date=Carbon::now()->toDateString();
-        $dp->save();
+            if ($rmNum && $rmNum != -1) {
+                $rm = roommodel::findOrFail($rmNum);
+                $rm->status = "free";
+                $rm->save();
+            }
+            $per->assigned_room_id = -2;
 
-        return response()->json(["suc"=>"De patient is nu officieel dood"]);
+            $per->dead = 1;
+            $per->save();
+
+            $dp = new diedpatientmodel;
+            $dp->patient_id = $id;
+            $dp->date = Carbon::now()->toDateString();
+            $dp->save();
+
+            return response()->json(["suc" => "De patient is nu officieel dood"]);
+        } else
+            return response()->json(["err" => "Patient is al dood"]);
     }
 }
