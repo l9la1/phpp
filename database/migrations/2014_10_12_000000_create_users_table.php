@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string("perms");
+            $table->string("perms"); // 0 = doctor, 1 = admin, 2 = patient
             $table->rememberToken();
             $table->timestamps();
         });
