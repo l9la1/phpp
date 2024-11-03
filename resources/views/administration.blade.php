@@ -300,7 +300,6 @@ remove client
             <th>geboortedatum</th>
             <th>kamer nummer</th>
             <th>familie</th>
-            <th>medisch dosier</th>
             <th></th>
         </tr>
     <tbody>
@@ -479,14 +478,12 @@ remove client
                                 </div>
                             @endif
                         </div>
-                </td>
-                <td>
-                    <a href="/medical/{{ $pt->id }}" class="btn btn-primary btn-sm" target="_blank"
-                        rel="noopener noreferrer">medisch dosier</a>
-                </td>
+                    </td>
                 <td>
                     <ul class="action-list">
-                        <li><button class="btn btn-primary" onclick="addaptPatient({{ $pt->id }})"><i
+                        <li><a href="/medical/{{ $pt->id }}" class="btn btn-success btn-sm" target="_blank"
+                            rel="noopener noreferrer"><i class="bi bi-file-earmark-medical-fill"></i></a></li>
+                        <li><button class="btn btn-warning" onclick="addaptPatient({{ $pt->id }})"><i
                                     class="bi bi-pencil"></i></button></li>
                         <li><button class="btn btn-danger" onclick="removePatient({{ $pt->id }})"><i
                                     class="bi bi-trash"></i></button></li>
@@ -511,12 +508,12 @@ remove client
     function makeApiCall(e, id) {
         e.preventDefault();
         const data = new FormData(document.getElementById(id));
+        console.log(data);
 
         fetch("/api/administrator/addFamily", {
             method: "POST",
             body: data,
             headers: {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
         }, ).then(err => showMess(err, function() {

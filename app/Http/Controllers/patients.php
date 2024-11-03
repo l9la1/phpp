@@ -100,10 +100,10 @@ class patients extends Controller
                 "name.max" => "De naam mag maximaal 255 zijn",
                 "address.required" => "De adres is een verplicht veld",
                 "address.max" => "De adres mag maar maximaal 20 characters lang zijn",
-                "phonenumber.required"=>"De telefoonnummer is verplicht",
-                "phonenumber.string"=>"De telefoonnummer moet een string zijn",
-                "date_of_birth.required"=>"De geboortedatum is een verplicht veld",
-                "date_of_birth.date"=>"De geboortedatum moet een datum zijn"
+                "phonenumber.required" => "De telefoonnummer is verplicht",
+                "phonenumber.string" => "De telefoonnummer moet een string zijn",
+                "date_of_birth.required" => "De geboortedatum is een verplicht veld",
+                "date_of_birth.date" => "De geboortedatum moet een datum zijn"
             ]
         );
 
@@ -130,15 +130,24 @@ class patients extends Controller
 
     public function kill($id)
     {
-        $per=patient::findOrFail($id);
-        $per->dead=1;
+        $per = patient::findOrFail($id);
+        $rmNum = $per->assigned_room_id;
+
+        if ($rmNum&&$rmNum!=-1) {
+            $rm=roommodel::findOrFail($rmNum);
+            $rm->status="free";
+            $rm->save();
+        }
+        $per->assigned_room_id=-2;
+
+        $per->dead = 1;
         $per->save();
 
-        $dp=new diedpatientmodel;
-        $dp->patient_id=$id;
-        $dp->date=Carbon::now()->toDateString();
+        $dp = new diedpatientmodel;
+        $dp->patient_id = $id;
+        $dp->date = Carbon::now()->toDateString();
         $dp->save();
 
-        return response()->json(["suc"=>"De patient is nu officieel dood"]);
+        return response()->json(["suc" => "De patient is nu officieel dood"]);
     }
 }
