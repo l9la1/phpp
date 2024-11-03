@@ -65,8 +65,10 @@ class familycontroller extends Controller
             "name.required"=>"De naam is verplicht",
             "name.max"=>"De naam mag maximaal 20 characters zijn"
         ]);
+        if(patient::findOrFail($req->ptid)->dead==0)
+        {
             // Check if there aren't two family members because you can only have two family members per client
-            if (patient::where("id", $req->ptid)->count() < 2) {
+            if (patient::findOrFail($req->ptid)->count() < 2) {
                 $fam = new familymembers();
                 $fam->patient_id = $req->ptid;
                 $fam->name = $req->name;
@@ -76,6 +78,8 @@ class familycontroller extends Controller
                 return response()->json(["suc" => "Successvol toegevoegd"]);
             } else
                 return response()->json(["err" => "Te veel familieleden"]);
+        }else
+        return response()->json(["err"=>"Je kunt geen nieuwe familieleden toevoegen aan een patient die dood is"]);
         } catch (ValidationException $ex) {
             return response()->json(["err" => $ex->errors()]);
         }
