@@ -8,11 +8,11 @@
     <title>Welkom</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
 <body>
-    
+
     <div class="container">
         <h1 class="header-title ">Welkom test</h1>
     </div>
@@ -38,10 +38,12 @@
                                     <tr>
                                         <td>€{{ number_format($fin->hire_cost, 2, ',', '.') }}</td>
                                         <td>€{{ number_format($fin->caretaking_costs, 2, ',', '.') }}</td>
-                                        <td>€{{number_format($fin->caretaking_costs+$fin->hire_cost,2,",",".")}}</td>
+                                        <td>€{{ number_format($fin->caretaking_costs + $fin->hire_cost, 2, ',', '.') }}
+                                        </td>
                                         <td>
                                             @if ($fin->payed == 0)
-                                                Nee
+                                                <button onclick="payed({{ $fin->id }})"
+                                                    class="btn btn-success">Betaal</button>
                                             @else
                                                 Ja
                                             @endif
@@ -90,6 +92,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
         integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        function payed(id) {
+            fetch("/api/patient/setPayed/" + id).then(() => {
+                location.reload();
+            });
+        }
+    </script>
 </body>
 
 </html>

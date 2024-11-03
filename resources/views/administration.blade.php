@@ -54,7 +54,9 @@
             <select class="form-control" id="rNumber" style="margin-bottom: 1rem;">
                 <option value="-1">Extern</option>
                 @foreach ($rooms as $room)
-                    <option value="{{ $room->id }}">{{ $room->id }}</option>
+                    @if ($room->status == 'free')
+                        <option value="{{ $room->id }}">{{ $room->id }}</option>
+                    @endif
                 @endforeach
             </select>
             <button class="btn btn-success" style="width: 100%;" onclick="$('#roomnumber').hide()">Verplaats</button>
@@ -66,36 +68,38 @@
                 oninput="search($(this).val())" />
         </div>
 
-        <table class="table table-hover table-striped text-center align-middle" id="que"
-            style="background-color: #fff;">
-            <thead style="background-color: #20c997; color: white;">
-                <tr>
-                    <th>Prioriteit</th>
-                    <th>Patient Naam</th>
-                    <th>Verplaats naar patient lijst</th>
-                    <th>Verwijder</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($queue as $que)
-                    <tr id="tr{{ $que->pat->id }}"
-                        style="background-color: #ffffff; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); margin-bottom: 10px;">
-                        <td>
-                            <input type="checkbox" id="c{{ $que->id }}"
-                                @if ($que->priority == 1) checked @endif
-                                onclick="updatePriority({{ $que->id }})" />
-                        </td>
-                        <td>{{ $que->pat->name }}</td>
-                        <td><button class="btn btn-warning btn-sm text-white"
-                                onclick="makePatient({{ $que->pat->id }})">Verplaats</button></td>
-                        <td><button class="btn btn-danger btn-sm"
-                                onclick="removeFromQueue({{ $que->id }},{{ $que->pat->id }})"><i
-                                    class="bi bi-trash"></i></button>
-                        </td>
+        
+            <table class="table table-hover table-striped text-center align-middle" id="que"
+                style="background-color: #fff;">
+                <thead style="background-color: #20c997; color: white;">
+                    <tr>
+                        <th>Prioriteit</th>
+                        <th>Patient Naam</th>
+                        <th>Verplaats naar patient lijst</th>
+                        <th>Verwijder</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($queue as $que)
+                        <tr id="tr{{ $que->pat->id }}"
+                            style="background-color: #ffffff; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); margin-bottom: 10px;">
+                            <td>
+                                <input type="checkbox" id="c{{ $que->id }}"
+                                    @if ($que->priority == 1) checked @endif
+                                    onclick="updatePriority({{ $que->id }})" />
+                            </td>
+                            <td>{{ $que->pat->name }}</td>
+                            <td><button class="btn btn-warning btn-sm text-white"
+                                    onclick="makePatient({{ $que->pat->id }})">Verplaats</button></td>
+                            <td><button class="btn btn-danger btn-sm"
+                                    onclick="removeFromQueue({{ $que->id }},{{ $que->pat->id }})"><i
+                                        class="bi bi-trash"></i></button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
@@ -300,32 +304,44 @@ remove client
             <th>geboortedatum</th>
             <th>kamer nummer</th>
             <th>familie</th>
-            <th>medisch dosier</th>
             <th></th>
         </tr>
     <tbody>
         @foreach ($pat as $pt)
             <tr id="{{ $pt->id }}">
                 <td>{{ $pt->name }}</td>
-                <td><input class="form-control" id="a{{ $pt->id }}" type="text"
-                        value="{{ $pt->address }}" />
+                <td>
+                    @if ($pt->dead == 0)
+                        <input class="form-control" id="a{{ $pt->id }}" type="text"
+                            value="{{ $pt->address }}" />
+                    @else
+                        {{ $pt->address }}
+                    @endif
                 </td>
-                <td><input class="form-control" type="text" id="p{{ $pt->id }}"
-                        value="{{ $pt->phonenumber }}" /></td>
+                <td>
+                    @if ($pt->dead == 0)
+                        <input class="form-control" type="text" id="p{{ $pt->id }}"
+                            value="{{ $pt->phonenumber }}" />
+                    @else
+                        {{ $pt->phonenumber }}
+                    @endif
+                </td>
                 <td>{{ $pt->date_of_birth }}</td>
                 <td>
-                    <select class="form-control" id="s{{ $pt->id }}">
-                        <option value="-1" @if ($pt->assigned_room_id == -1) selected @endif>extern</option>
-                        @foreach ($rooms as $rm)
-                            @if ($rm->id == $pt->assigned_room_id)
-                                <option value={{ $rm->id }} selected>
-                                    {{ $rm->id }}</option>
-                            @elseif($rm->status == 'free')
-                                <option value={{ $rm->id }}>
-                                    {{ $rm->id }}</option>
-                            @endif
-                        @endforeach
-                    </select>
+                    @if ($pt->dead == 0)
+                        <select class="form-control" id="s{{ $pt->id }}">
+                            <option value="-1" @if ($pt->assigned_room_id == -1) selected @endif>extern</option>
+                            @foreach ($rooms as $rm)
+                                @if ($rm->id == $pt->assigned_room_id)
+                                    <option value={{ $rm->id }} selected>
+                                        {{ $rm->id }}</option>
+                                @elseif($rm->status == 'free')
+                                    <option value={{ $rm->id }}>
+                                        {{ $rm->id }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    @endif
                 </td>
                 <td>
                     <button class="btn btn-secondary btn-sm"
@@ -350,20 +366,28 @@ remove client
                                         </div>
                                         <div class="mb-3 text-start">
                                             <label class="form-label">Telefoonnummer:</label>
-                                            <input type="text" class="form-control"
-                                                id="fp{{ $pt->familyMembers[0]->id }}"
-                                                value='{{ $pt->familyMembers[0]->contact_number }}' />
+                                            @if ($pt->dead == 0)
+                                                <input type="text" class="form-control"
+                                                    id="fp{{ $pt->familyMembers[0]->id }}"
+                                                    value='{{ $pt->familyMembers[0]->contact_number }}' />
+                                            @else
+                                                <p class="form-control">{{ $pt->familyMembers[0]->contact_number }}
+                                                </p>
+                                            @endif
                                         </div>
                                         <div class="mb-3 text-start">
-                                            <button class="btn btn-warning"
-                                                onclick="changeFam({{ $pt->familyMembers[0]->id }})">pas aan</button>
-                                            <button class="btn btn-danger"
-                                                onclick="removeFam({{ $pt->familyMembers[0]->id }})"><i
-                                                    class="bi bi-trash"></i></button>
+                                            @if ($pt->dead == 0)
+                                                <button class="btn btn-warning"
+                                                    onclick="changeFam({{ $pt->familyMembers[0]->id }})">pas
+                                                    aan</button>
+                                                <button class="btn btn-danger"
+                                                    onclick="removeFam({{ $pt->familyMembers[0]->id }})"><i
+                                                        class="bi bi-trash"></i></button>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
-                            @else
+                            @elseif($pt->dead == 0)
                                 <div class="card d-inline-block">
                                     <form action="addFamily" method="post"
                                         onsubmit="makeApiCall(event,'id0'+{{ $pt->id }})"
@@ -423,20 +447,28 @@ remove client
                                         </div>
                                         <div class="mb-3 text-start">
                                             <label class="form-label">Telefoonnummer:</label>
-                                            <input type="text" class="form-control"
-                                                id="fp{{ $pt->familyMembers[1]->id }}"
-                                                value='{{ $pt->familyMembers[1]->contact_number }}' />
+                                            @if ($pt->dead == 0)
+                                                <input type="text" class="form-control"
+                                                    id="fp{{ $pt->familyMembers[1]->id }}"
+                                                    value='{{ $pt->familyMembers[1]->contact_number }}' />
+                                            @else
+                                                <p class="form-control">{{ $pt->familyMembers[1]->contact_number }}
+                                                </p>
+                                            @endif
                                         </div>
                                         <div class="mb-3 text-start">
-                                            <button class="btn btn-warning"
-                                                onclick="changeFam({{ $pt->familyMembers[1]->id }})">pas aan</button>
-                                            <button class="btn btn-danger"
-                                                onclick="removeFam({{ $pt->familyMembers[1]->id }})"><i
-                                                    class="bi bi-trash"></i></button>
+                                            @if ($pt->dead == 0)
+                                                <button class="btn btn-warning"
+                                                    onclick="changeFam({{ $pt->familyMembers[1]->id }})">pas
+                                                    aan</button>
+                                                <button class="btn btn-danger"
+                                                    onclick="removeFam({{ $pt->familyMembers[1]->id }})"><i
+                                                        class="bi bi-trash"></i></button>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
-                            @else
+                            @elseif($pt->dead==0)
                                 <div class="card d-inline-block">
                                     <form action="addFamily" method="post"
                                         onsubmit="makeApiCall(event,'id1'+{{ $pt->id }})"
@@ -481,18 +513,18 @@ remove client
                         </div>
                 </td>
                 <td>
-                    <a href="/medical/{{ $pt->id }}" class="btn btn-primary btn-sm" target="_blank"
-                        rel="noopener noreferrer">medisch dosier</a>
-                </td>
-                <td>
                     <ul class="action-list">
-                        <li><button class="btn btn-primary" onclick="addaptPatient({{ $pt->id }})"><i
+                        <li><a href="/medical/{{ $pt->id }}" class="btn btn-success btn-sm" target="_blank"
+                                rel="noopener noreferrer"><i class="bi bi-file-earmark-medical-fill"></i></a></li>
+                    @if($pt->dead==0)
+                        <li><button class="btn btn-warning" onclick="addaptPatient({{ $pt->id }})"><i
                                     class="bi bi-pencil"></i></button></li>
                         <li><button class="btn btn-danger" onclick="removePatient({{ $pt->id }})"><i
                                     class="bi bi-trash"></i></button></li>
                         <li><button class="btn btn-dark border-none" onclick="killPatient({{ $pt->id }})"><img
                                     src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.ciFUIiHSO-kAIL9ZO2-0ugHaIl%26pid%3DApi&f=1&ipt=04cec10803c662be0473655c4d571f4d39670530754687a2f3886701e76193bf&ipo=images"
                                     style="width:inherit;height:inherit" /></button></li>
+                    @endif
                     </ul>
                 </td>
             </tr>
@@ -516,7 +548,6 @@ remove client
             method: "POST",
             body: data,
             headers: {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
         }, ).then(err => showMess(err, function() {
@@ -606,17 +637,21 @@ remove client
                 showMess(er, function() {
                     $("#fm" + id).hide("slow", "linear");
                     $("#fm" + id).empty();
+                    location.reload();
                 });
             });
     }
 
     function killPatient(id) {
         if (confirm("Ben je zeker om deze patient als dood te melden.\n Het kan niet meer ongedaan worden gedaan")) {
-            if (confirm("Ben je echt zeker om deze patient als dood te melden.\n Het kan niet meer ongedaan worden gedaan"))
-                if (confirm("Ben je echt echt zeker om deze patient als dood te melden.\n Het kan niet meer ongedaan worden gedaan"))
-                    fetch("/api/administrator/killPatient/" + id).then(er => showMess(er,function() {
-                        $("#"+id).hide("slow","linear",function(){
-                            $("#"+id).empty();
+            if (confirm(
+                    "Ben je echt zeker om deze patient als dood te melden.\n Het kan niet meer ongedaan worden gedaan"))
+                if (confirm(
+                        "Ben je echt echt zeker om deze patient als dood te melden.\n Het kan niet meer ongedaan worden gedaan"
+                        ))
+                    fetch("/api/administrator/killPatient/" + id).then(er => showMess(er, function() {
+                        $("#" + id).hide("slow", "linear", function() {
+                            $("#" + id).empty();
                         })
                     }));
         }
