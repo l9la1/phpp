@@ -567,23 +567,24 @@ create new invoices
             <form action="add_doc" method="post">
             @csrf
             <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-3" name="name" placeholder="Magere Hein">
+                <input type="text" class="form-control rounded-3" name="name" placeholder="Magere Hein" required>
                 <label for="name">Naam</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="date" class="form-control rounded-3" name="date_of_birth">
+                <input type="date" class="form-control rounded-3" name="date_of_birth" required>
                 <label for="date_of_birth">Geboortedatum</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="email" class="form-control rounded-3" name="contact_email" placeholder="name@example.com">
+                <input type="email" class="form-control rounded-3" name="contact_email" placeholder="name@example.com" required>
                 <label for="contact_email">Email</label>
             </div>
+            <label>Telefoonnummer formaat: 0612345678</label>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-3" name="contact_phone" placeholder="1234567890">
+                <input type="tel" pattern="[0-9]{10}" class="form-control rounded-3" name="contact_phone" placeholder="06-123-456-78" required>
                 <label for="contact_phone">Telefoonnummer</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-3" name="specialty" placeholder="Hartchirurg, Kaakchirurg">
+                <input type="text" class="form-control rounded-3" name="specialty" placeholder="Hartchirurg, Kaakchirurg" required>
                 <label for="specialty">Specialiteit</label>
             </div>
             <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Voeg toe</button>
@@ -602,15 +603,16 @@ create new invoices
             <form action="add_doc" method="post">
             @csrf
             <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-3" name="name" placeholder="Magere Hein">
+                <input type="text" class="form-control rounded-3" name="name" placeholder="Magere Hein" required>
                 <label for="name">Naam</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="email" class="form-control rounded-3" name="admin_mail" placeholder="name@example.com">
+                <input type="email" class="form-control rounded-3" name="admin_mail" placeholder="name@example.com" required>
                 <label for="admin_mail">Email</label>
             </div>
+            <label>Minimaal 8, Maximaal 25</label>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-3" name="password" placeholder="password">
+                <input type="password" maxlength="25" class="form-control rounded-3" name="password" placeholder="password" required>
                 <label for="password">Wachtwoord</label>
             </div>
             <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Voeg toe</button>
