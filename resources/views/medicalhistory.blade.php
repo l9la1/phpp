@@ -20,7 +20,7 @@
 <body>
     @if (isset($patient))
         <div class="row">
-            <div class="col-6">
+            <div class="@if($patient->dead==0) col-6 @else col-12 @endif">
                 <table class="table table-bordered table-hover table-striped text-center align-middle" id="pTable">
                     <thead class="thead-dark">
                         <tr>
@@ -38,6 +38,7 @@
                     </tbody>
                 </table>
             </div>
+            @if($patient->dead==0)
             <div class="col-6">
                 <form method="post" action="addInformation">
                     @csrf
@@ -57,6 +58,7 @@
                     </div>
                 </form>
             </div>
+            @endif
         @else
             <input type="text" oninput="searchPatient($(this).val())" class="form-control w-100">
             <table class="table table-bordered table-hover table-striped text-center align-middle" id="patient">
