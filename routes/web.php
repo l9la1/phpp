@@ -7,6 +7,7 @@ use App\Http\Controllers\familycontroller;
 use App\Http\Controllers\financcontroller;
 use App\Http\Controllers\queuecontroler;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\accounts;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,8 @@ Route::prefix("administrator")->group(function(){
 Route::get("/{what}",[queuecontroler::class,"showQueue"]);
 Route::post("/addFamily",[familycontroller::class,"addMember"]);
 Route::post("/addInvoice",[financcontroller::class,"addInvoices"]);
+Route::post("/add_doc",action: [accounts::class,"add_doc"]);
+Route::post("/add_admin",action: [accounts::class,"add_admin"]);
 });
 
 Route::prefix("patient")->group(function(){

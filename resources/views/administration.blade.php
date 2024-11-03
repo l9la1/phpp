@@ -16,16 +16,19 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="queue">wachtlijst</a>
+                        <a class="nav-link" href="queue">Wachtlijst</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="appointment">afspraak</a>
+                        <a class="nav-link" href="appointment">Afspraak</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="client">patienten</a>
+                        <a class="nav-link" href="client">Patienten</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="invoice">facaturen</a>
+                        <a class="nav-link" href="invoice">Facaturen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="add_account">Toevoegen account</a>
                     </li>
                 </ul>
             </div>
@@ -542,6 +545,105 @@ create new invoices
         </div>
     </div>
 </div>
+</body>
+
+</html>
+@elseif($what == 'add_account')
+<div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
+<div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+  <ul class="dropdown-menu position-static d-grid gap-1 p-2 rounded-3 mx-0 shadow w-220px" data-bs-theme="light">
+    <li><a href="#" class="dropdown-item rounded-2" onclick="changeContent('dokter')" >Dokter</a></li>
+    <li><a href="#" class="dropdown-item rounded-2" onclick="changeContent('administratie')" >Administratie</a></li>
+  </ul>
+</div>
+<div id="content">
+<div id="dokterTemplate" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+        <div class="modal-header p-5 pb-4 border-bottom-0">
+            <h1 class="fw-bold mb-0 fs-2">Toevoegen dokter</h1>
+        </div>
+        <div class="modal-body p-5 pt-0">
+            <form action="add_doc" method="post">
+            @csrf
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" name="name" placeholder="Magere Hein">
+                <label for="name">Naam</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="date" class="form-control rounded-3" name="date_of_birth">
+                <label for="date_of_birth">Geboortedatum</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control rounded-3" name="contact_email" placeholder="name@example.com">
+                <label for="contact_email">Email</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" name="contact_phone" placeholder="1234567890">
+                <label for="contact_phone">Telefoonnummer</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" name="specialty" placeholder="Hartchirurg, Kaakchirurg">
+                <label for="specialty">Specialiteit</label>
+            </div>
+            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Voeg toe</button>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+    <div id="administratieTemplate" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+        <div class="modal-header p-5 pb-4 border-bottom-0">
+            <h1 class="fw-bold mb-0 fs-2">Toevoegen administratie</h1>
+        </div>
+        <div class="modal-body p-5 pt-0">
+            <form action="add_doc" method="post">
+            @csrf
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" name="name" placeholder="Magere Hein">
+                <label for="name">Naam</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control rounded-3" name="admin_mail" placeholder="name@example.com">
+                <label for="admin_mail">Email</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" name="password" placeholder="password">
+                <label for="password">Wachtwoord</label>
+            </div>
+            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Voeg toe</button>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+</script>
+<script>
+    function changeContent(value) {
+        // Hide all templates first
+        document.getElementById('dokterTemplate').style.display = 'none';
+        document.getElementById('administratieTemplate').style.display = 'none';
+
+        // Show the selected template
+        if (value === 'dokter') {
+            document.getElementById('dokterTemplate').style.display = 'block';
+        } else if (value === 'administratie') {
+            document.getElementById('administratieTemplate').style.display = 'block';
+        }
+    }
+</script>
+</form>
+
+@if (Session::has('success'))
+    <div class="alert alert-succes" id="mes">
+        {{ session::get('success' )}}
+    </div>
+    @endif
 </body>
 
 </html>
