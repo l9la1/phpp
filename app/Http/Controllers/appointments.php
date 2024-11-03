@@ -13,7 +13,7 @@ class appointments extends Controller
     public function getAppointments()
     {
         $currentTime = Carbon::now()->setTimezone('Europe/Amsterdam');
-        return view("doctors", ['app' => appointment::where("appointment_date",">=",$currentTime->toDateTimeString())->orderBy("appointment_date")->get(), "patient" => patient::orderBy("name")->where("approval_state",1)->where("dead",0)->get()]);
+        return view("doctors", ['app' => appointment::where("appointment_date",">=",$currentTime->toDateTimeString())->orderBy("appointment_date")->get(), "patient" => patient::orderBy("name")->where("approval_state",1)->where("dead","0")->get()]);
     }
 
     // This is to addapt an appointment of the doctor
@@ -88,7 +88,7 @@ class appointments extends Controller
     }
 
     // This is to delete a appointment
-    public function deleteApointment($id)
+    public function deleteAppointment($id)
     {
         if(is_int((int)$id))
         {

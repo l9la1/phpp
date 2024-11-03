@@ -57,7 +57,7 @@
                                 <textarea class="form-control" name="reason" id="nAppReason" required></textarea>
                             </div>
                             <div class="text-end">
-                                <input type="submit" class="btn btn-custom" value="Voeg Afspraak Toe" />
+                                <input type="submit" class="btn btn-primary" value="Voeg Afspraak Toe" />
                             </div>
                         </form>
                     </div>
