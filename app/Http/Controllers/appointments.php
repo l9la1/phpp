@@ -88,7 +88,7 @@ class appointments extends Controller
     }
 
     // This is to delete a appointment
-    public function deleteApointment($id)
+    public function deleteAppointment($id)
     {
         if(is_int((int)$id))
         {
