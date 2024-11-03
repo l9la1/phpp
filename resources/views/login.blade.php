@@ -18,15 +18,15 @@
         <form action="{{ route('login.store') }}" method="POST">
 
             @csrf
-            <label for="name">Name:</label>
-            <input type="text" name="name" required>
+            <label for="emial">Email:</label>
+            <input type="email" name="email" required>
             
             <label for="password">Password:</label>
             <input type="text" name="password" required>
 
             <button type="submit">Login</button>
         </form>
-        <p class="text-center mt-4">Nog geen account? <a href="{{ route('patients.create') }}">Registreer hier</a></p>
+        <!-- <p class="text-center mt-4">Nog geen account? <a href="{{ route('patients.create') }}">Registreer hier</a></p> -->
     </div>
 </body>
 

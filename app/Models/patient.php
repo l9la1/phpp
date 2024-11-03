@@ -13,13 +13,16 @@ class patient extends Model
     use HasFactory;
 
     protected $fillable = [
+        'login_id',  // should match the actual field name in the table
         'name',  // should match the actual field name in the table
         'address',  // should match the actual field name in the table
         'phonenumber',
+        'email',
         'date_of_birth',
         'approval_state',
         'assigned_room_id',
-        'registration_date'
+        'registration_date',
+        'password',
     ];
     public $timestamps = false;
     protected $table = 'patients';

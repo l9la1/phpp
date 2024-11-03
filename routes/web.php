@@ -10,6 +10,7 @@ use App\Http\Controllers\familycontroller;
 use App\Http\Controllers\financcontroller;
 use App\Http\Controllers\medicalcontroller;
 use App\Http\Controllers\incidentscontroller;
+use App\Http\Controllers\Users;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,7 @@ use App\Http\Controllers\incidentscontroller;
 */
 // All the doctor routes
 Route::prefix("doctor")->group(function(){
-Route::get('/',[appointments::class,'getAppointments']);
+Route::get('/',[appointments::class,'getAppointments'])->name('docter.index');
 Route::post("/",[appointments::class,"addapt_Appointment"]);
 });
 
@@ -53,4 +54,4 @@ Route::post('/patientregister', [patients::class, 'store'])->name('patients.stor
 // Route::get('/thankyou', action: [patients::class, 'thankyou'])->name('patients.thankyou');
 
 Route::get('/login', [patients::class, 'showLoginForm'])->name('login.create');
-Route::post('/login', [patients::class, 'login'])->name('login.store');
+Route::post('/login', [Users::class, 'login'])->name('login.store');
