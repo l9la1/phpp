@@ -29,7 +29,7 @@ Route::post("/",[appointments::class,"addapt_Appointment"]);
 });
 
 Route::prefix("administrator")->group(function(){
-Route::get("/{what}",[queuecontroler::class,"showQueue"]);
+Route::get("/{what}",[queuecontroler::class,"showQueue"])->name("administrator.index");
 Route::post("/addInvoice",[financcontroller::class,"addInvoices"]);
 Route::post("/addRoom",[roomcontroller::class,"addRoom"]);
 });
@@ -41,7 +41,7 @@ Route::prefix("incidents")->group(function(){
     Route::get("/",[incidentscontroller::class,"index"]);
 });
 Route::prefix("patient")->group(function(){
-    Route::get("/",[patients::class,"index"]);
+    Route::get("/",[patients::class,"index"])->name(name: 'patient.index');
 });
 // This is where the user will redirect to if url not found or api
 Route::fallback(function () {

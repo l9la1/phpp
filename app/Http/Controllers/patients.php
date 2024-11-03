@@ -18,9 +18,15 @@ class patients extends Controller
 {
     public function index()
     {
+        $user_id = session('user_id');
+        $patient = patient::where('login_id', $user_id)->first();
+        
+
+
         return view("patients", [
-            'financial' => financials::where("patient_id", 2)->orderBy("id", "desc")->limit(5)->get(),
-            'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get()
+            'financial' => financials::where("patient_id", $patient->id)->orderBy("id", "desc")->limit(5)->get(),
+            'appointments' => appointment::where("patient_id", $patient->id)->orderBy("appointment_date")->get(),
+            'patient' => $patient,
         ]);
     }
 

@@ -14,7 +14,7 @@
 <body>
     
     <div class="container">
-        <h1 class="header-title ">Welkom test</h1>
+        <h1 class="header-title ">Welkom {{ $patient->name }}</h1>
     </div>
     <div class="row">
         <div class="col-6">
