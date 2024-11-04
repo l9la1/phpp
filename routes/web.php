@@ -44,7 +44,7 @@ Route::prefix("incidents")->middleware("checkLogin")->group(function(){
     Route::get("/",[incidentscontroller::class,"index"]);
 });
 Route::prefix("patient")->middleware("checkRol:2")->group(function(){
-    Route::get("/",[patients::class,"index"])->name(name: 'patient.index');
+    Route::get("/",[patients::class,"index"])->name( 'patient.index');
 });
 // This is where the user will redirect to if url not found or api
 Route::fallback(function () {
