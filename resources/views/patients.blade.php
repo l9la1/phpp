@@ -15,6 +15,7 @@
 
     <div class="container">
         <h1 class="header-title ">Welkom {{ $patient->name }}</h1>
+        <a href="{{ route('logout') }}">Log uit</a>
     </div>
     <div class="row">
         <div class="col-6">
