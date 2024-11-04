@@ -13,7 +13,6 @@
 </head>
 
 <body>
-    {{dd(session("perm"))}}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
