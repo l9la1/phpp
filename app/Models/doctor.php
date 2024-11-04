@@ -16,6 +16,7 @@ class doctor extends Model
         'contact_phone',
         'speciality',
     ];
+    public $timestamps = false;
     protected $table = 'doctors';
 
     // This is so you know wich appointments has one doctor

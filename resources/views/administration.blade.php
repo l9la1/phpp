@@ -19,16 +19,25 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="queue">wachtlijst</a>
+                        <a class="nav-link" href="queue">Wachtlijst</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="appointment">afspraak</a>
+                        <a class="nav-link" href="appointment">Afspraak</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="client">patienten</a>
+                        <a class="nav-link" href="client">Patienten</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="invoice">facaturen</a>
+                        <a class="nav-link" href="invoice">Facaturen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="add_account">Toevoegen account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="room">kamers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/incidents" target="_blank">incidenten</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="room">kamers</a>
@@ -878,6 +887,246 @@ create new invoices
             });
     }
 </script>
+</body>
+
+</html>
+@elseif('rooms')
+<div class="row ps-5 pe-5 pt-2">
+    <div class="col-6">
+        <div id="messages" class="container mt-3 alert"
+            style="display:none; border-radius: 8px; font-weight: bold;"></div>
+        <h3 class="text-center"
+            style="background-color:#6c757d; color: #fff; padding: 15px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            Bestaande Kamers
+        </h3>
+        <table class="table table-bordered table-hover table-striped text-center align-middle" id="pTable">
+            <thead class="thead-dark">
+                <tr>
+                    <td>#</td>
+                    <td>hoeveel personen kamer</td>
+                    <td>price</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($rooms as $rm)
+                    <tr id="tr{{ $rm->id }}">
+                        @if ($rm->status == 'bezet')
+                            <td>{{ $rm->id }}</td>
+                            <td>{{ $rm->bed_amount }}</td>
+                            <td>€ {{ number_format($rm->price, 2, ',', '.') }}</td>
+                            <td></td>
+                        @else
+                            <td>{{ $rm->id }}</td>
+                            <td><input type="number" class="form-control" value="{{ $rm->bed_amount }}"
+                                    id="b{{ $rm->id }}" max="2" min="1" /></td>
+                            <td>€<input type="number" step="0.01" class="form-control"
+                                    style="width:19rem;display:inline;"min="0.01" value="{{ $rm->price }}"
+                                    id="p{{ $rm->id }}" /></td>
+                            <td>
+                                <ul class="action-list">
+                                    <li><button class="btn btn-primary" onclick="addaptRoom({{ $rm->id }})"><i
+                                                class="bi bi-pencil"></i></button></li>
+                                    <li><button class="btn btn-danger" onclick="removeRoom({{ $rm->id }})"><i
+                                                class="bi bi-trash"></i></button></li>
+                                </ul>
+                            </td>
+                        @endif
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div class="col-6">
+        @if (Session::has('success'))
+            <div class="alert alert-success" id="mes">
+                {{ Session::get('success') }}
+            </div>
+        @endif
+        <form method="post" action="addRoom">
+            @csrf
+            <div class="card">
+                <div class="card-header text-center text-capitalize">
+                    <h3>maak nieuwe kamer</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Hoeveel personen kamer</label>
+                        @error('bedamount')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <input type="number" min="1" max="2" value="1" name="bedamount"
+                            class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Prijs</label>
+                        @error('price')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <input type="number" step="0.01" value="0.01" min="0.01" name="price"
+                            class="form-control" required />
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input type="submit" value="voeg kamer toe" class="btn btn-success w-100" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+    integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ asset('js/apiResponse.js') }}"></script>
+
+<script>
+    // This is when there is data sended and there is a message hide it after a specified time
+    document.addEventListener("DOMContentLoaded", function() {
+        var mes = $("#mes");
+        if (mes)
+            setTimeout(() => {
+                mes.hide("slow", "linear");
+            }, 2000);
+    });
+
+    // This is to addapt a room
+    function addaptRoom(id) {
+        fetch("/api/administrator/update_room", {
+            method: "POST",
+            body: JSON.stringify({
+                id: id,
+                bedAmount: $("#b" + id).val(),
+                price: $("#p" + id).val()
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }).then(res => {
+            showMess(res);
+        })
+    }
+
+    // This is to remove a room
+    function removeRoom(id) {
+        if (confirm('Ben je zeker om de kamer te verwijderen'))
+            fetch("/api/administrator/remove_room/" + id).then(res => {
+                showMess(res, function() {
+                    $("#tr" + id).hide("slow", "linear", function() {
+                        $("#tr" + id).empty();
+                    });
+                });
+            });
+    }
+</script>
+</body>
+
+</html>
+@elseif($what == 'add_account')
+<div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
+<div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+  <ul class="dropdown-menu position-static d-grid gap-1 p-2 rounded-3 mx-0 shadow w-220px" data-bs-theme="light">
+    <li><a href="#" class="dropdown-item rounded-2" onclick="changeContent('dokter')" >Dokter</a></li>
+    <li><a href="#" class="dropdown-item rounded-2" onclick="changeContent('administratie')" >Administratie</a></li>
+  </ul>
+</div>
+<div id="content">
+<div id="dokterTemplate" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+        <div class="modal-header p-5 pb-4 border-bottom-0">
+            <h1 class="fw-bold mb-0 fs-2">Toevoegen dokter</h1>
+        </div>
+        <div class="modal-body p-5 pt-0">
+            <form action="add_doc" method="post">
+            @csrf
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" name="name" placeholder="Magere Hein" required>
+                <label for="name">Naam</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="date" class="form-control rounded-3" name="date_of_birth" required>
+                <label for="date_of_birth">Geboortedatum</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control rounded-3" name="contact_email" placeholder="name@example.com" required>
+                <label for="contact_email">Email</label>
+            </div>
+            <label>Telefoonnummer formaat: 0612345678</label>
+            <div class="form-floating mb-3">
+                <input type="tel" pattern="[0-9]{10}" class="form-control rounded-3" name="contact_phone" placeholder="06-123-456-78" required>
+                <label for="contact_phone">Telefoonnummer</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" name="specialty" placeholder="Hartchirurg, Kaakchirurg" required>
+                <label for="specialty">Specialiteit</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control rounded-3" name="password" placeholder="Hartchirurg, Kaakchirurg">
+                <label for="password">Wachtwoord</label>
+            </div>
+            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Voeg toe</button>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+    <div id="administratieTemplate" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+        <div class="modal-header p-5 pb-4 border-bottom-0">
+            <h1 class="fw-bold mb-0 fs-2">Toevoegen administratie</h1>
+        </div>
+        <div class="modal-body p-5 pt-0">
+            <form action="add_admin" method="post">
+            @csrf
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" name="name" placeholder="Magere Hein" required>
+                <label for="name">Naam</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control rounded-3" name="admin_mail" placeholder="name@example.com" required>
+                <label for="admin_mail">Email</label>
+            </div>
+            <label>Minimaal 8, Maximaal 25</label>
+            <div class="form-floating mb-3">
+                <input type="password" maxlength="25" class="form-control rounded-3" name="password" placeholder="password" required>
+                <label for="password">Wachtwoord</label>
+            </div>
+            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Voeg toe</button>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+</script>
+<script>
+    function changeContent(value) {
+        // Hide all templates first
+        document.getElementById('dokterTemplate').style.display = 'none';
+        document.getElementById('administratieTemplate').style.display = 'none';
+
+        // Show the selected template
+        if (value === 'dokter') {
+            document.getElementById('dokterTemplate').style.display = 'block';
+        } else if (value === 'administratie') {
+            document.getElementById('administratieTemplate').style.display = 'block';
+        }
+    }
+</script>
+</form>
+
+@if (Session::has('success'))
+    <div class="alert alert-succes" id="mes">
+        {{ session::get('success' )}}
+    </div>
+    @endif
 </body>
 
 </html>

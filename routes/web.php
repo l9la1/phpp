@@ -4,11 +4,12 @@ use App\Http\Controllers\patients;
 use App\Http\Middleware\checkPerms;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\appointments;
-use App\Http\Controllers\queuecontroler;
 use App\Http\Controllers\roomcontroller;
-use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\familycontroller;
 use App\Http\Controllers\financcontroller;
+use App\Http\Controllers\queuecontroler;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\accounts;
 use App\Http\Controllers\medicalcontroller;
 use App\Http\Controllers\incidentscontroller;
 use App\Http\Controllers\Users;
@@ -32,7 +33,10 @@ Route::post("/",[appointments::class,"addapt_Appointment"]);
 Route::prefix("administrator")->middleware("checkRol:1")->group(function(){
 Route::get("/{what}",[queuecontroler::class,"showQueue"])->name("administrator.index");
 Route::post("/addInvoice",[financcontroller::class,"addInvoices"]);
-Route::post("/addRoom",[roomcontroller::class,"addRoom"]);
+Route::post("/addFamily",[familycontroller::class,"addMember"]);
+
+Route::post("/add_doc",action: [accounts::class,"add_doc"]);
+Route::post("/add_admin",action: [accounts::class,"add_admin"]);
 });
 
 Route::prefix("medical")->middleware("checkLogin")->group(function(){
