@@ -72,17 +72,16 @@ class Users extends Controller
 
             $request->session()->put('user_id', $user->id); // Customize session management as needed
             $request->session()->put('perm', $user->perms);
+            $request->session()->put('name', $user->name);
             $request->session()->regenerate();
-
 
             if ($user->perms == 0) {
                 return redirect()->route('docter.index');
             } else if ($user->perms == 1) {
                 return redirect()->route('administrator.index', 'client');
             } else if ($user->perms == 2) {
-                $patient = patient::where('email', $validatedData['email'])->first();
-                $approval_state = $patient->approval_state;
-                if ($approval_state == 0) {
+                $approval_state = patient::where('email', $validatedData['email'])->first("approval_state");
+                if ($approval_state == '0') {
                     return redirect()->back();
                 } else {
                     return redirect()->route('patient.index');

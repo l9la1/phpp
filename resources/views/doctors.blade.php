@@ -22,6 +22,9 @@
         <li class="nav-item">
             <a class="nav-link" href="/incidents" target="_blank">incidenten</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('logout') }}">Log uit</a>
+        </li>
     </nav>
     <div id="messages" class="container mt-3"></div>
 
