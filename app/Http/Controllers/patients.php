@@ -28,7 +28,8 @@ class patients extends Controller
         
         return view("patients", [
             'financial' => financials::where("patient_id", 2)->orderBy("id", "desc")->limit(5)->get(),
-            'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get()
+            'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get(),
+            'patient'=>$patient,
         ]);
     }
 
