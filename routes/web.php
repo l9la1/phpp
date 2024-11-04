@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\patients;
+use App\Http\Middleware\checkPerms;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\appointments;
 use App\Http\Controllers\queuecontroler;
@@ -23,29 +24,31 @@ use App\Http\Controllers\Users;
 |
 */
 // All the doctor routes
-Route::prefix("doctor")->group(function(){
+Route::prefix("doctor")->middleware("checkRol:0")->group(function(){
 Route::get('/',[appointments::class,'getAppointments'])->name('docter.index');
 Route::post("/",[appointments::class,"addapt_Appointment"]);
 });
 
-Route::prefix("administrator")->group(function(){
+Route::prefix("administrator")->middleware("checkRol:1")->group(function(){
 Route::get("/{what}",[queuecontroler::class,"showQueue"])->name("administrator.index");
 Route::post("/addInvoice",[financcontroller::class,"addInvoices"]);
 Route::post("/addRoom",[roomcontroller::class,"addRoom"]);
 });
+
 Route::prefix("medical")->group(function(){
     Route::get("/{id?}",[medicalcontroller::class,"index"]);
     Route::post("/addInformation",[medicalcontroller::class,"addInformation"]);
 });
+
 Route::prefix("incidents")->group(function(){
     Route::get("/",[incidentscontroller::class,"index"]);
 });
-Route::prefix("patient")->group(function(){
+Route::prefix("patient")->middleware("checkRol:2")->group(function(){
     Route::get("/",[patients::class,"index"])->name(name: 'patient.index');
 });
 // This is where the user will redirect to if url not found or api
 Route::fallback(function () {
-    return Redirect::to("/doctor");
+    return Redirect::to("/login");
 });
 
 Route::get('/patientregister', [patients::class, 'create'])->name('patients.create');

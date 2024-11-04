@@ -69,6 +69,7 @@ class Users extends Controller
             // Manually log in the user (e.g., by setting session data)
             
             $request->session()->put('user_id', $user->id); // Customize session management as needed
+            $request->session()->put('perm', $user->perms); 
             $request->session()->regenerate();
     
             
