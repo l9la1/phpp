@@ -101,7 +101,7 @@ class patients extends Controller
             [
                 'name' => 'required|string|max:255',
                 'address' => 'required|string',
-                'phonenumber' => 'required|string',
+                'phonenumber' => 'required|digits:10|integer',
                 'email' => 'required|email|unique:users,email', // Ensure email is unique in users table
                 'date_of_birth' => 'required|date',
                 'password' => 'required|string|min:8',

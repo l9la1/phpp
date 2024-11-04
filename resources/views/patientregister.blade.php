@@ -24,16 +24,16 @@
             <input type="text" name="address" required>
             
             <label for="phonenumber">Telefoon Nummer:</label>
-            <input type="text" name="phonenumber" required>
+            <input type="text" name="phonenumber" pattern="\d+" title="Voer alleen cijfers in." required>
 
-            <label for="email">Email:</label>
+            <label for="email">E-mail adres:</label>
             <input type="email" name="email" required>
 
-            <label for="date_of_birth">Geboorte datum:</label>
-            <input type="date" name="date_of_birth" required>
+            <label for="date_of_birth">Geboortedatum:</label>
+            <input type="date" name="date_of_birth"required>
 
             <label for="password">Wachtwoord:</label>
-            <input type="password" name="password" required>
+            <input type="password" name="password" minlength="8" required>
 
             <button type="submit">Registreer</button>
         </form>
