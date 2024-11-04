@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 // All the doctor routes
-Route::prefix("doctor")->group(function(){
+Route::prefix("doctor")->middleware("checkRol:0")->group(function(){
 Route::post("/addApointment",[appointments::class,"addApointment"]);
 Route::get("/deleteApp/{id}",[appointments::class,"deleteAppointment"]);
 });
@@ -33,7 +33,7 @@ Route::prefix("/incident")->group(function(){
     Route::post("/addIncident",[incidentscontroller::class,"addIncident"]);
 });
 
-Route::prefix("administrator")->group(function(){
+Route::prefix("administrator")->middleware("checkRol:1")->group(function(){
 Route::get("/assign_room/{room_id}/{patient_id}",[queuecontroler::class,"addPatientAndAssignRoom"]);
 Route::get("/removeQueue/{id}",[queuecontroler::class,"removeOutOfQueue"]);
 Route::post("/changeApp",[appointments::class,"changeApp"]);
