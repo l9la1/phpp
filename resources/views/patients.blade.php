@@ -12,10 +12,10 @@
 </head>
 
 <body>
-
-    <div class="container">
-        <h1 class="header-title ">Welkom {{ $patient->name }}</h1>
-        <a href="{{ route('logout') }}">Log uit</a>
+    
+    <div class="container d-flex justify-content-between align-items-center">
+        <h1 class="header-title">Welkom {{ $patient->name }}</h1>
+        <a href="{{ route('logout') }}" class="logout-link">Log uit</a>
     </div>
     <div class="row">
         <div class="col-6">
