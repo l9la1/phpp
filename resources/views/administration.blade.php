@@ -38,12 +38,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/incidents" target="_blank">incidenten</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="room">kamers</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/incidents" target="_blank">incidenten</a>
-                    </li>
                 </ul>
             </div>
         </div>
