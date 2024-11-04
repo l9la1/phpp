@@ -12,7 +12,7 @@ class accounts extends Controller{
         $req->validate([
             "name"=> "string|required",
             "date_of_birth"=> "date|required",
-            "contact_email"=> "string|required",
+            "contact_email"=> "string|required|unique:users,email",
             "contact_phone"=> "integer|required|digits:10",
             "specialty"=> "string|required",
             "password"=>"required|min:8",
@@ -38,7 +38,7 @@ class accounts extends Controller{
     {
         $req->validate([
             "name"=> "string|required",
-            "admin_mail"=> "string|required",
+            "admin_mail"=> "string|required|unique:users,email",
             "password"=> "string|required|min:8|max:25",
         ]);
         // Weet niet hoe ik het moet doen met perms en tokens
