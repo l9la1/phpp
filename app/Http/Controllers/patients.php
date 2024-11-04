@@ -25,24 +25,22 @@ class patients extends Controller
         } else {
             $patient = null;
         }
-        
+
         return view("patients", [
             'financial' => financials::where("patient_id", 2)->orderBy("id", "desc")->limit(5)->get(),
             'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get(),
-            'patient'=>$patient,
+            'patient' => $patient,
         ]);
     }
 
     public function setPayed($id)
     {
-        if(is_int((int)$id))
-        {
-            $fin=financials::find($id);
-            $fin->payed=1;
+        if (is_int((int)$id)) {
+            $fin = financials::find($id);
+            $fin->payed = 1;
             $fin->save();
-            return response()->json(['suc'=>""]);
+            return response()->json(['suc' => ""]);
         }
-
     }
 
     // To store the addapted data in the db
@@ -143,10 +141,10 @@ class patients extends Controller
                 "password.required" => "Het wachtwoord is een verplicht veld",
                 "password.string" => "Het wachtwoord moet een string zijn",
                 "password.min" => "Het wachtwoord moet minimaal 8 characters lang zijn",
-                
+
             ]
         );
-    
+
 
         // Create user data for login
         $user = User::create([
@@ -155,32 +153,32 @@ class patients extends Controller
             'password' => bcrypt($validatedData['password']), // Encrypt password
             'perms' => 2, // Set permissions for the user
         ]);
-    
+
         // Prepare patient data and set registration date
         $validatedData['registration_date'] = now();
         $validatedData['login_id'] = $user->id; // Associate patient with the new user
-    
+
         // Create patient entry
         $patient = patient::create([
             'login_id' => $user->id, // Set user ID
             'name' => $validatedData['name'],
-            'address'=> $validatedData['address'],
+            'address' => $validatedData['address'],
             'phonenumber' => $validatedData['phonenumber'],
             'email' => $validatedData['email'],
             'date_of_birth' => $validatedData['date_of_birth'],
             'registration_date' => $validatedData['registration_date'],
         ]);
-    
+
         // Add patient to the queue
         Queue::create([
             'patient_id' => $patient->id, // Set patient ID
             'priority' => 0, // Default priority is 0
             'status' => 0,   // Status: waiting
         ]);
-    
-        return redirect()->back()->with('success','');
+
+        return redirect()->back()->with('success', '');
     }
-    
+
 
 
     public function thankyou()
@@ -215,13 +213,30 @@ class patients extends Controller
     }
 
     // Show login form
-    public function showLoginForm() {
-        return view('login'); 
+    public function showLoginForm()
+    {
+        if (!session("name") && !session("user_id") && !session("perm"))
+            return view('login');
+        else {
+            $perm=session("perm");
+            if ($perm == 0) {
+                return redirect()->route('docter.index');
+            } else if ($perm == 1) {
+                return redirect()->route('administrator.index', 'client');
+            } else if ($perm == 2) {
+                $approval_state = patient::where('name', session("name"))->first("approval_state");
+                if ($approval_state == '0') {
+                    return redirect()->back();
+                } else {
+                    return redirect()->route('patient.index');
+                }
+            }
+        }
     }
 
     // Process login submission
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         // Validate and authenticate the user here
     }
-
 }
