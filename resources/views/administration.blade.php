@@ -35,6 +35,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/incidents" target="_blank">Incidenten</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('logout') }}">Log uit</a>
+                    </li>
                 </ul>
             </div>
         </div>
