@@ -76,7 +76,7 @@ class Users extends Controller
             if ($user->perms == 0) {
                 return redirect()->route('docter.index');
             } else if ($user->perms == 1) {
-                return redirect()->route('administrator.index');
+                return redirect()->route('administrator.index','client');
             } else if ($user->perms == 2) {
                 return redirect()->route('patient.index');
             } 
