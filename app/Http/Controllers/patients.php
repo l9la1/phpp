@@ -119,7 +119,7 @@ class patients extends Controller
             [
                 'name' => 'required|string|max:255',
                 'address' => 'required|string',
-                'phonenumber' => 'required|string',
+                'phonenumber' => 'required|digits:10|integer',
                 'email' => 'required|email|unique:users,email', // Ensure email is unique in users table
                 'date_of_birth' => 'required|date',
                 'password' => 'required|string|min:8',
@@ -144,39 +144,41 @@ class patients extends Controller
 
             ]
         );
+        if ($request->date_of_birth < Carbon::now()) {
 
+            // Create user data for login
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => bcrypt($validatedData['password']), // Encrypt password
+                'perms' => 2, // Set permissions for the user
+            ]);
 
-        // Create user data for login
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => bcrypt($validatedData['password']), // Encrypt password
-            'perms' => 2, // Set permissions for the user
-        ]);
+            // Prepare patient data and set registration date
+            $validatedData['registration_date'] = now();
+            $validatedData['login_id'] = $user->id; // Associate patient with the new user
 
-        // Prepare patient data and set registration date
-        $validatedData['registration_date'] = now();
-        $validatedData['login_id'] = $user->id; // Associate patient with the new user
+            // Create patient entry
+            $patient = patient::create([
+                'login_id' => $user->id, // Set user ID
+                'name' => $validatedData['name'],
+                'address' => $validatedData['address'],
+                'phonenumber' => $validatedData['phonenumber'],
+                'email' => $validatedData['email'],
+                'date_of_birth' => $validatedData['date_of_birth'],
+                'registration_date' => $validatedData['registration_date'],
+            ]);
 
-        // Create patient entry
-        $patient = patient::create([
-            'login_id' => $user->id, // Set user ID
-            'name' => $validatedData['name'],
-            'address' => $validatedData['address'],
-            'phonenumber' => $validatedData['phonenumber'],
-            'email' => $validatedData['email'],
-            'date_of_birth' => $validatedData['date_of_birth'],
-            'registration_date' => $validatedData['registration_date'],
-        ]);
+            // Add patient to the queue
+            Queue::create([
+                'patient_id' => $patient->id, // Set patient ID
+                'priority' => 0, // Default priority is 0
+                'status' => 0,   // Status: waiting
+            ]);
 
-        // Add patient to the queue
-        Queue::create([
-            'patient_id' => $patient->id, // Set patient ID
-            'priority' => 0, // Default priority is 0
-            'status' => 0,   // Status: waiting
-        ]);
-
-        return redirect()->back()->with('success', '');
+            return redirect()->back()->with('success', '');
+        }else
+        return redirect()->back()->with("error","Je kunt niet in de toekomst geboren zijn");
     }
 
 
@@ -218,7 +220,7 @@ class patients extends Controller
         if (!session("name") && !session("user_id") && !session("perm"))
             return view('login');
         else {
-            $perm=session("perm");
+            $perm = session("perm");
             if ($perm == 0) {
                 return redirect()->route('docter.index');
             } else if ($perm == 1) {
