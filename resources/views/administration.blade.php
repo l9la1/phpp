@@ -748,7 +748,7 @@ create new invoices
 </body>
 
 </html>
-@elseif($what=='rooms')
+@elseif($what=='room')
 <div class="row ps-5 pe-5 pt-2">
     <div class="col-6">
         <div id="messages" class="container mt-3 alert"

@@ -60,7 +60,7 @@
             </div>
             @endif
         @else
-            <input type="text" oninput="searchPatient($(this).val())" class="form-control w-100">
+            <input type="text" oninput="searchPatient($(this).val())" class="form-control w-100" placeholder="Zoek patient">
             <table class="table table-bordered table-hover table-striped text-center align-middle" id="patient">
                 <thead class="thead-dark">
                     <tr>
