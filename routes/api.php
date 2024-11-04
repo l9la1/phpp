@@ -29,7 +29,7 @@ Route::post("/addApointment",[appointments::class,"addApointment"]);
 Route::get("/deleteApp/{id}",[appointments::class,"deleteAppointment"]);
 });
 
-Route::prefix("/incident")->group(function(){
+Route::prefix("/incident")->middleware("checkLogin")->group(function(){
     Route::post("/addIncident",[incidentscontroller::class,"addIncident"]);
 });
 

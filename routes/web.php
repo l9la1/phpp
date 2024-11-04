@@ -35,12 +35,12 @@ Route::post("/addInvoice",[financcontroller::class,"addInvoices"]);
 Route::post("/addRoom",[roomcontroller::class,"addRoom"]);
 });
 
-Route::prefix("medical")->group(function(){
+Route::prefix("medical")->middleware("checkLogin")->group(function(){
     Route::get("/{id?}",[medicalcontroller::class,"index"]);
     Route::post("/addInformation",[medicalcontroller::class,"addInformation"]);
 });
 
-Route::prefix("incidents")->group(function(){
+Route::prefix("incidents")->middleware("checkLogin")->group(function(){
     Route::get("/",[incidentscontroller::class,"index"]);
 });
 Route::prefix("patient")->middleware("checkRol:2")->group(function(){
@@ -51,8 +51,8 @@ Route::fallback(function () {
     return Redirect::to("/login");
 });
 
-Route::get('/patientregister', [patients::class, 'create'])->name('patients.create');
-Route::post('/patientregister', [patients::class, 'store'])->name('patients.store');
+Route::middleware("checkLogin")->get('/patientregister', [patients::class, 'create'])->name('patients.create');
+Route::middleware("checkLogin")->post('/patientregister', [patients::class, 'store'])->name('patients.store');
 
 // Route::get('/thankyou', action: [patients::class, 'thankyou'])->name('patients.thankyou');
 
