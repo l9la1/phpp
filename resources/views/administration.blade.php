@@ -586,6 +586,10 @@ create new invoices
                 <input type="text" class="form-control rounded-3" name="specialty" placeholder="Hartchirurg, Kaakchirurg">
                 <label for="specialty">Specialiteit</label>
             </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control rounded-3" name="password" placeholder="Hartchirurg, Kaakchirurg">
+                <label for="password">Wachtwoord</label>
+            </div>
             <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Voeg toe</button>
             </form>
         </div>
@@ -610,7 +614,7 @@ create new invoices
                 <label for="admin_mail">Email</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-3" name="password" placeholder="password">
+                <input type="password" class="form-control rounded-3" name="password" placeholder="password">
                 <label for="password">Wachtwoord</label>
             </div>
             <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Voeg toe</button>
