@@ -22,7 +22,7 @@
             <input type="email" name="email" required>
             
             <label for="password">Password:</label>
-            <input type="text" name="password" required>
+            <input type="password" name="password" required>
 
             <button type="submit">Login</button>
         </form>
