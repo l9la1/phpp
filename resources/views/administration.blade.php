@@ -748,7 +748,7 @@ create new invoices
 </body>
 
 </html>
-@elseif('rooms')
+@elseif($what=='rooms')
 <div class="row ps-5 pe-5 pt-2">
     <div class="col-6">
         <div id="messages" class="container mt-3 alert"
@@ -883,142 +883,8 @@ create new invoices
 </body>
 
 </html>
-@elseif('rooms')
-<div class="row ps-5 pe-5 pt-2">
-    <div class="col-6">
-        <div id="messages" class="container mt-3 alert"
-            style="display:none; border-radius: 8px; font-weight: bold;"></div>
-        <h3 class="text-center"
-            style="background-color:#6c757d; color: #fff; padding: 15px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-            Bestaande Kamers
-        </h3>
-        <table class="table table-bordered table-hover table-striped text-center align-middle" id="pTable">
-            <thead class="thead-dark">
-                <tr>
-                    <td>#</td>
-                    <td>hoeveel personen kamer</td>
-                    <td>price</td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($rooms as $rm)
-                    <tr id="tr{{ $rm->id }}">
-                        @if ($rm->status == 'bezet')
-                            <td>{{ $rm->id }}</td>
-                            <td>{{ $rm->bed_amount }}</td>
-                            <td>€ {{ number_format($rm->price, 2, ',', '.') }}</td>
-                            <td></td>
-                        @else
-                            <td>{{ $rm->id }}</td>
-                            <td><input type="number" class="form-control" value="{{ $rm->bed_amount }}"
-                                    id="b{{ $rm->id }}" max="2" min="1" /></td>
-                            <td>€<input type="number" step="0.01" class="form-control"
-                                    style="width:19rem;display:inline;"min="0.01" value="{{ $rm->price }}"
-                                    id="p{{ $rm->id }}" /></td>
-                            <td>
-                                <ul class="action-list">
-                                    <li><button class="btn btn-primary" onclick="addaptRoom({{ $rm->id }})"><i
-                                                class="bi bi-pencil"></i></button></li>
-                                    <li><button class="btn btn-danger" onclick="removeRoom({{ $rm->id }})"><i
-                                                class="bi bi-trash"></i></button></li>
-                                </ul>
-                            </td>
-                        @endif
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    <div class="col-6">
-        @if (Session::has('success'))
-            <div class="alert alert-success" id="mes">
-                {{ Session::get('success') }}
-            </div>
-        @endif
-        <form method="post" action="addRoom">
-            @csrf
-            <div class="card">
-                <div class="card-header text-center text-capitalize">
-                    <h3>maak nieuwe kamer</h3>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label">Hoeveel personen kamer</label>
-                        @error('bedamount')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        <input type="number" min="1" max="2" value="1" name="bedamount"
-                            class="form-control" required />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Prijs</label>
-                        @error('price')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        <input type="number" step="0.01" value="0.01" min="0.01" name="price"
-                            class="form-control" required />
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <input type="submit" value="voeg kamer toe" class="btn btn-success w-100" />
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
-    integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{ asset('js/apiResponse.js') }}"></script>
 
-<script>
-    // This is when there is data sended and there is a message hide it after a specified time
-    document.addEventListener("DOMContentLoaded", function() {
-        var mes = $("#mes");
-        if (mes)
-            setTimeout(() => {
-                mes.hide("slow", "linear");
-            }, 2000);
-    });
-
-    // This is to addapt a room
-    function addaptRoom(id) {
-        fetch("/api/administrator/update_room", {
-            method: "POST",
-            body: JSON.stringify({
-                id: id,
-                bedAmount: $("#b" + id).val(),
-                price: $("#p" + id).val()
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        }).then(res => {
-            showMess(res);
-        })
-    }
-
-    // This is to remove a room
-    function removeRoom(id) {
-        if (confirm('Ben je zeker om de kamer te verwijderen'))
-            fetch("/api/administrator/remove_room/" + id).then(res => {
-                showMess(res, function() {
-                    $("#tr" + id).hide("slow", "linear", function() {
-                        $("#tr" + id).empty();
-                    });
-                });
-            });
-    }
-</script>
-</body>
-
-</html>
-@elseif($what == 'add_account')
+@elseif($what == "add_account")
 <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
 <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
   <ul class="dropdown-menu position-static d-grid gap-1 p-2 rounded-3 mx-0 shadow w-220px" data-bs-theme="light">
