@@ -51,10 +51,10 @@ Route::fallback(function () {
     return Redirect::to("/login");
 });
 
-Route::middleware("checkLogin")->get('/patientregister', [patients::class, 'create'])->name('patients.create');
-Route::middleware("checkLogin")->post('/patientregister', [patients::class, 'store'])->name('patients.store');
-
-// Route::get('/thankyou', action: [patients::class, 'thankyou'])->name('patients.thankyou');
+Route::get('/patientregister', [patients::class, 'create'])->name('patients.create');
+Route::post('/patientregister', [patients::class, 'store'])->name('patients.store');
 
 Route::get('/login', [patients::class, 'showLoginForm'])->name('login.create');
 Route::post('/login', [Users::class, 'login'])->name('login.store');
+
+Route::get('/logout', [Users::class, 'logout'])->name('logout');

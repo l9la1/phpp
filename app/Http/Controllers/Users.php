@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\patient;
 
 
 
@@ -64,6 +65,9 @@ class Users extends Controller
     
         // Find the user by email
         $user = User::where('email', $validatedData['email'])->first();
+
+        $patient = patient::where('email', $validatedData['email'])->first();
+        $approval_state = $patient->approval_state;
         // Check if the user exists and if the password matches
         if ($user && Hash::check($validatedData['password'], $user->password)) {
             // Manually log in the user (e.g., by setting session data)
@@ -78,13 +82,24 @@ class Users extends Controller
             } else if ($user->perms == 1) {
                 return redirect()->route('administrator.index','client');
             } else if ($user->perms == 2) {
-                return redirect()->route('patient.index');
+                if ($approval_state == 0) {
+                    return redirect()->back();
+                } else {
+                    return redirect()->route('patient.index');
+                }
             } 
         }
     
         // If credentials don't match
         return back()->withErrors([
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login.create');
     }
 
     // Display the specified user

@@ -18,22 +18,22 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="queue">wachtlijst</a>
+                        <a class="nav-link" href="queue">Wachtlijst</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="appointment">afspraak</a>
+                        <a class="nav-link" href="appointment">Afspraak</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="client">patienten</a>
+                        <a class="nav-link" href="client">Patienten</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="invoice">facaturen</a>
+                        <a class="nav-link" href="invoice">Facaturen</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="room">kamers</a>
+                        <a class="nav-link" href="room">Kamers</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/incidents" target="_blank">incidenten</a>
+                        <a class="nav-link" href="/incidents" target="_blank">Incidenten</a>
                     </li>
                 </ul>
             </div>
