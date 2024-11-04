@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\patients;
+use App\Http\Middleware\checkPerms;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\appointments;
 use App\Http\Controllers\queuecontroler;
@@ -10,6 +11,7 @@ use App\Http\Controllers\familycontroller;
 use App\Http\Controllers\financcontroller;
 use App\Http\Controllers\medicalcontroller;
 use App\Http\Controllers\incidentscontroller;
+use App\Http\Controllers\Users;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,31 +24,37 @@ use App\Http\Controllers\incidentscontroller;
 |
 */
 // All the doctor routes
-Route::prefix("doctor")->group(function(){
-Route::get('/',[appointments::class,'getAppointments']);
+Route::prefix("doctor")->middleware("checkRol:0")->group(function(){
+Route::get('/',[appointments::class,'getAppointments'])->name('docter.index');
 Route::post("/",[appointments::class,"addapt_Appointment"]);
 });
 
-Route::prefix("administrator")->group(function(){
-Route::get("/{what}",[queuecontroler::class,"showQueue"]);
+Route::prefix("administrator")->middleware("checkRol:1")->group(function(){
+Route::get("/{what}",[queuecontroler::class,"showQueue"])->name("administrator.index");
 Route::post("/addInvoice",[financcontroller::class,"addInvoices"]);
 Route::post("/addRoom",[roomcontroller::class,"addRoom"]);
 });
-Route::prefix("medical")->group(function(){
+
+Route::prefix("medical")->middleware("checkLogin")->group(function(){
     Route::get("/{id?}",[medicalcontroller::class,"index"]);
     Route::post("/addInformation",[medicalcontroller::class,"addInformation"]);
 });
-Route::prefix("incidents")->group(function(){
+
+Route::prefix("incidents")->middleware("checkLogin")->group(function(){
     Route::get("/",[incidentscontroller::class,"index"]);
 });
-Route::prefix("patient")->group(function(){
-    Route::get("/",[patients::class,"index"]);
+Route::prefix("patient")->middleware("checkRol:2")->group(function(){
+    Route::get("/",[patients::class,"index"])->name(name: 'patient.index');
 });
 // This is where the user will redirect to if url not found or api
 Route::fallback(function () {
-    return Redirect::to("/doctor");
+    return Redirect::to("/login");
 });
 
-Route::get('/patientregister', [patients::class, 'create'])->name('patients.create');
-Route::post('/patientregister', [patients::class, 'store'])->name('patients.store');
-Route::get('/thankyou', [patients::class, 'thankyou'])->name('patients.thankyou');
+Route::middleware("checkLogin")->get('/patientregister', [patients::class, 'create'])->name('patients.create');
+Route::middleware("checkLogin")->post('/patientregister', [patients::class, 'store'])->name('patients.store');
+
+// Route::get('/thankyou', action: [patients::class, 'thankyou'])->name('patients.thankyou');
+
+Route::get('/login', [patients::class, 'showLoginForm'])->name('login.create');
+Route::post('/login', [Users::class, 'login'])->name('login.store');

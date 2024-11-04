@@ -13,7 +13,7 @@ class appointments extends Controller
     public function getAppointments()
     {
         $currentTime = Carbon::now()->setTimezone('Europe/Amsterdam');
-        return view("doctors", ['app' => appointment::where("appointment_date",">=",$currentTime->toDateTimeString())->orderBy("appointment_date")->get(), "patient" => patient::orderBy("name")->where("approval_state",1)->where("dead","0")->get()]);
+        return view("doctors", ['app' => appointment::where("id",session('user_id'))->where("appointment_date",">=",$currentTime->toDateTimeString())->orderBy("appointment_date")->get(), "patient" => patient::orderBy("name")->where("approval_state",1)->where("dead",0)->get()]);
     }
 
     // This is to addapt an appointment of the doctor
@@ -38,7 +38,7 @@ class appointments extends Controller
             "reason.max"=>"De reden veld mag niet langer dan 150 characters",
             "reason.min"=>"De reden veld moet minimaal 10 characters lang zijn"
         ]);
-            $ct = appointment::where("appointment_date",$req->date)->where("doctor_id",1)->count();
+            $ct = appointment::where("appointment_date",$req->date)->where("doctor_id",session('user_id'))->count();
             if($ct>1)
                 throw ValidationException::withMessages(['date'=>["The date has already been taken."]]);
             $app = appointment::find($req->id);
@@ -78,7 +78,7 @@ class appointments extends Controller
 
             $app  = new appointment;
             $app->patient_id = $req->patientName;
-            $app->doctor_id = 1;
+            $app->doctor_id = session('user_id');
             $app->reason = $req->reason;
             $app->appointment_date = $req->date;
             $app->save();

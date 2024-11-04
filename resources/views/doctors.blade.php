@@ -76,7 +76,7 @@
                                     <tr>
                                         <th class="client-col">Client</th>
                                         <th class="date-col">Datum</th>
-                                        <th class="reason-col">Voor Wat</th>
+                                        <th class="reason-col">Reden</th>
                                         <th class="action-col">Adapt</th>
                                         <th class="action-col">Remove</th>
                                     </tr>

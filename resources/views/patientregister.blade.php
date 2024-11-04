@@ -17,19 +17,25 @@
 
         <form action="{{ route('patients.store') }}" method="POST">
             @csrf
-            <label for="name">Name:</label>
+            <label for="name">Naam:</label>
             <input type="text" name="name" required>
             
-            <label for="address">Address:</label>
+            <label for="address">Addres:</label>
             <input type="text" name="address" required>
             
-            <label for="phonenumber">Phone Number:</label>
+            <label for="phonenumber">Telefoon Nummer:</label>
             <input type="text" name="phonenumber" required>
 
-            <label for="date_of_birth">Date of Birth:</label>
+            <label for="email">Email:</label>
+            <input type="email" name="email" required>
+
+            <label for="date_of_birth">Geboorte datum:</label>
             <input type="date" name="date_of_birth" required>
 
-            <button type="submit">Register</button>
+            <label for="password">Wachtwoord:</label>
+            <input type="password" name="password" required>
+
+            <button type="submit">Registreer</button>
         </form>
     </div>
 </body>

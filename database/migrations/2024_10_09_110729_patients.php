@@ -13,15 +13,20 @@ return new class extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
-            $table->text('address');
-            $table->text('phonenumber');
+            $table->unsignedBigInteger('login_id');
+            $table->string('name');
+            $table->string('address');
+            $table->string('phonenumber');
+            $table->string('email')->unique();
             $table->date('date_of_birth');
-            $table->boolean('approval_state')->default(false);
-            $table->integer('assigned_room_id')->nullable();
-            $table->date('registration_date')->useCurrent();
-            $table->boolean("dead")->default(0);
+            $table->tinyInteger('approval_state')->default(0);
+            $table->unsignedBigInteger('assigned_room_id')->nullable();
+            $table->date('registration_date');
+            $table->boolean('dead')->default(false);
             $table->timestamps();
+
+            $table->foreign('login_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('assigned_room_id')->references('id')->on('rooms')->onDelete('cascade');
         });
     }
 
@@ -31,5 +36,6 @@ return new class extends Migration
     public function down(): void
     {
         //
+        Schema::dropIfExists('patients');
     }
 };

@@ -9,6 +9,7 @@ use App\Models\roommodel;
 
 use App\Models\financials;
 use App\Models\appointment;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\diedpatientmodel;
 use Illuminate\Validation\ValidationException;
@@ -17,8 +18,13 @@ class patients extends Controller
 {
     public function index()
     {
+        $user_id = session('user_id');
+        $patient = patient::where('login_id', $user_id)->first();
+        
+
+
         return view("patients", [
-            'financial' => financials::where("patient_id", 1)->orderBy("id", "desc")->limit(5)->get(),
+            'financial' => financials::where("patient_id", 2)->orderBy("id", "desc")->limit(5)->get(),
             'appointments' => appointment::where("patient_id", 1)->orderBy("appointment_date")->get()
         ]);
     }
@@ -112,7 +118,10 @@ class patients extends Controller
                 'name' => 'required|string|max:255',
                 'address' => 'required|string',
                 'phonenumber' => 'required|string',
+                'email' => 'required|email|unique:users,email', // Ensure email is unique in users table
                 'date_of_birth' => 'required|date',
+                'password' => 'required|string|min:8',
+
             ],
             [
                 "name.required" => "De naam veld is verplicht",
@@ -122,25 +131,52 @@ class patients extends Controller
                 "address.max" => "De adres mag maar maximaal 20 characters lang zijn",
                 "phonenumber.required" => "De telefoonnummer is verplicht",
                 "phonenumber.string" => "De telefoonnummer moet een string zijn",
+                "email.required" => "Het email veld is verplicht",
+                "email.email" => "Het email moet een geldig email zijn",
+                "email.unique" => "Het email is al in gebruik",
                 "date_of_birth.required" => "De geboortedatum is een verplicht veld",
-                "date_of_birth.date" => "De geboortedatum moet een datum zijn"
+                "date_of_birth.date" => "De geboortedatum moet een datum zijn",
+                "password.required" => "Het wachtwoord is een verplicht veld",
+                "password.string" => "Het wachtwoord moet een string zijn",
+                "password.min" => "Het wachtwoord moet minimaal 8 characters lang zijn",
+                
             ]
         );
+    
 
+        // Create user data for login
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password']), // Encrypt password
+            'perms' => 2, // Set permissions for the user
+        ]);
+    
+        // Prepare patient data and set registration date
         $validatedData['registration_date'] = now();
-
-        // Save patient data
-        $patient = patient::create($validatedData);
-
+        $validatedData['login_id'] = $user->id; // Associate patient with the new user
+    
+        // Create patient entry
+        $patient = patient::create([
+            'login_id' => $user->id, // Set user ID
+            'name' => $validatedData['name'],
+            'address'=> $validatedData['address'],
+            'phonenumber' => $validatedData['phonenumber'],
+            'email' => $validatedData['email'],
+            'date_of_birth' => $validatedData['date_of_birth'],
+            'registration_date' => $validatedData['registration_date'],
+        ]);
+    
         // Add patient to the queue
-        queue::create([
+        Queue::create([
             'patient_id' => $patient->id, // Set patient ID
-            'priority' => 0, // Set priority, default is 0
+            'priority' => 0, // Default priority is 0
             'status' => 0,   // Status: waiting
         ]);
-
-        return redirect()->route('patients.store');
+    
+        return redirect()->back()->with('success','');
     }
+    
 
 
     public function thankyou()
@@ -173,4 +209,15 @@ class patients extends Controller
         } else
             return response()->json(["err" => "Patient is al dood"]);
     }
+
+    // Show login form
+    public function showLoginForm() {
+        return view('login'); 
+    }
+
+    // Process login submission
+    public function login(Request $request) {
+        // Validate and authenticate the user here
+    }
+
 }
